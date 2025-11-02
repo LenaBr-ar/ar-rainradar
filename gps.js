@@ -13,7 +13,8 @@ function getPosition() {
 }
 
 async function loadLocation(element) {
-    let position = await getPosition();
-    console.log(position);
-    element.innerText = `Geo-Koordinaten: ${position.coords.latitude} ${position.coords.longitude}`;
+    let position = await getPosition().catch(e => element.innerText = e);
+    if (position) {
+        element.innerText = `Geo-Koordinaten: ${position.coords.latitude} ${position.coords.longitude}`;
+    }
 }
