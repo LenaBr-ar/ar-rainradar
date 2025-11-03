@@ -14,3 +14,9 @@ Smartphone bzw. Tablet mit AR-Unterstützung.
 
 
 Link: https://lenabr-ar.github.io/ar-rainradar/
+
+
+Schnittstelle Wetterdaten - Bright Sky API:
+Die Bright Sky API ist eine kostenlose Schnittstelle, über die aktuelle Wetterdaten und Wettervorhersagen abgerufen werden können. Sie nutzt Daten des Deutschen Wetterdienstes (DWD) und bietet unter anderem Niederschlagsradar, Temperatur, Wind, Bewölkung und Prognosen. Die API liefert die Daten in einem leicht nutzbaren JSON-Format, wodurch sie sich gut für Anwendungen wie das AR Rain Radar eignet.
+https://brightsky.dev/docs/#/operations/getCurrentWeather
+
