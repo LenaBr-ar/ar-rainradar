@@ -7,6 +7,7 @@
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <script src="gps.js"></script>
+  <script src="weather.js"></script>
   <style>
     html, body { margin:0; height:100%; background: transparent; }
     #infoText { position:fixed; bottom:1rem; left:1rem; color:#fff; font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; z-index:10; text-shadow:0 1px 2px #000; }
@@ -17,6 +18,7 @@
   <div id="infoText">
     <div id="hint">Schritt 2: Eine schwebende Wolke aus Kugeln. (Kamera erlauben)</div>
     <div id="locationText">Geo-Koordinaten werden geladen ...</div>
+    <div id="weatherData">Lade Wettervorhersage...</div>
   </div>
 
   <!-- Transparentes Rendering + AR.js Webcam-Modus -->
@@ -60,6 +62,7 @@
     });
     
     loadLocation(document.getElementById("locationText"));
+    getWeather(document.getElementById("weatherData"));
   </script>
 </body>
 </html>
