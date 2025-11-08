@@ -8,16 +8,30 @@
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <script src="gps.js"></script>
   <script src="weather.js"></script>
+  <script src="ui-elements.js"></script>
   <style>
     html, body { margin:0; height:100%; background: transparent; }
     #infoText { position:fixed; bottom:1rem; left:1rem; color:#fff; font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; z-index:10; text-shadow:0 1px 2px #000; }
+    .svg-icon { height: 20px; width:20 px}
     a-scene { background-color: transparent !important; }
   </style>
 </head>
 <body>
   <div id="infoText">
-    <div id="hint">Schritt 2: Eine schwebende Wolke aus Kugeln. (Kamera erlauben)</div>
-    <div id="locationText">Geo-Koordinaten werden geladen ...</div>
+    <button id="location-button" type="button" onclick="showLocalWeather()"><img src="current-location-icon.svg" role="img" class="svg-icon"/></button>
+    <form id="location-form" action="#">
+      <input list="default-places" id="location-choice" value="52.455753 13.297442"/>
+      <button type="submit">Ok</button>
+    </form>
+
+      <datalist id="default-places">
+        <option value="52.455753 13.297442" label="T9"></option>
+        <option value="25.298889 91.581389" label="Mawsynram"></option>
+        <option value="-44.648056 167.905556" label="Milford Sound"></option>
+        <option value="-9.431944 159.955556" label="Solomon Islands"></option>
+      </datalist>
+    <!-- <div id="hint">Schritt 2: Eine schwebende Wolke aus Kugeln. (Kamera erlauben)</div>
+    <div id="locationText">Geo-Koordinaten werden geladen ...</div> -->
     <div id="weatherData">Lade Wettervorhersage...</div>
   </div>
 
@@ -61,8 +75,9 @@
       }
     });
     
-    loadLocation(document.getElementById("locationText"));
-    getWeather(document.getElementById("weatherData"));
+    document.getElementById("location-form").addEventListener("submit", showWeather);
+
+    showLocalWeather();
   </script>
 </body>
 </html>
