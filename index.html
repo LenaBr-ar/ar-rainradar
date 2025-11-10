@@ -11,7 +11,7 @@
   <style>
     html, body { margin:0; height:100%; background: transparent; }
     #infoText { position:fixed; bottom:1rem; left:1rem; color:#fff; font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; z-index:10; text-shadow:0 1px 2px #000; }
-    .svg-icon { height: 20px; width:20 px}
+    .svg-icon { height: 20px; width:20px; }
     a-scene { background-color: transparent !important; }
   </style>
 </head>
@@ -23,16 +23,16 @@
       <button type="submit">Ok</button>
     </form>
 
-      <datalist id="default-places">
-        <option value="52.455753 13.297442" label="T9"></option>
-        <option value="25.298889 91.581389" label="Mawsynram"></option>
-        <option value="-44.648056 167.905556" label="Milford Sound"></option>
-        <option value="-9.431944 159.955556" label="Solomon Islands"></option>
-      </datalist>
+    <datalist id="default-places">
+      <option value="52.455753 13.297442" label="T9"></option>
+      <option value="25.298889 91.581389" label="Mawsynram"></option>
+      <option value="-44.648056 167.905556" label="Milford Sound"></option>
+      <option value="-9.431944 159.955556" label="Solomon Islands"></option>
+    </datalist>
+
     <div id="weatherData">Lade Wettervorhersage...</div>
   </div>
 
-  <!-- Transparentes Rendering + AR.js Webcam-Modus -->
   <a-scene 
     embedded 
     vr-mode-ui="enabled:false"
@@ -43,35 +43,28 @@
     <a-entity light="type: ambient; intensity: 0.7"></a-entity>
     <a-entity light="type: directional; intensity: 0.6" position="0 1 0"></a-entity>
 
-    <!-- Wolke aus mehreren Kugeln. -->
-    <!-- Position: x y z (Meter). Z negativ = vor der Kamera. -->
-    <a-entity id="cloud" position="0 0.5 -2" 
-              animation="property: position; dir: alternate; dur: 3000; loop: true; to: 0 1 -2">
-      <!-- Mitte -->
+    <!-- Wolke jetzt über dir statt vor dir -->
+    <a-entity id="cloud" position="0 2 0"
+              animation="property: position; dir: alternate; dur: 3000; loop: true; to: 0 2.2 0">
+
       <a-sphere color="#ffffff" radius="0.35" position="0 0 0"></a-sphere>
-      <!-- rechte Seite -->
       <a-sphere color="#ffffff" radius="0.28" position="0.38 0.05 0"></a-sphere>
-      <!-- linke Seite -->
       <a-sphere color="#ffffff" radius="0.25" position="-0.36 0.02 0"></a-sphere>
-      <!-- oben -->
       <a-sphere color="#ffffff" radius="0.20" position="0.08 0.20 0"></a-sphere>
-      <!-- vorne (Z leicht näher an der Kamera) -->
       <a-sphere color="#ffffff" radius="0.18" position="0 -0.02 0.12"></a-sphere>
     </a-entity>
 
-<!-- Kamera mit First Person View / Gyroskop 
- look-controls = schauen / umsehen, mit Maus, Touch oder Gyro.
-  Steuert die Position / Bewegung der Kamera (vorwärts / rückwärts / links / rechts).-->
-<a-entity 
-  camera
-  look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
-  wasd-controls="enabled: false">
-</a-entity>
-    
+    <!-- Kamera mit Gyroskop / First Person -->
+    <a-entity 
+      camera
+      look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
+      wasd-controls="enabled: false">
+    </a-entity>
+
   </a-scene>
+
   <script src="ui-elements.js"></script>
   <script>
-    // iOS/Autoplay-Workaround: Falls Video pausiert erneut starten
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         const video = document.querySelector('video');
@@ -83,3 +76,4 @@
   </script>
 </body>
 </html>
+
