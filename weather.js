@@ -13,7 +13,10 @@ function parseWeather(weatherData) {
     }
 }
 
-async function getWeather(element) {
+async function getWeatherData(coords) {
+    if (!coords) {
+        return null;
+    }
     // forecast for local timezone in 6 hours
     const forecastHour = 6;
     const date = new Date();
@@ -23,29 +26,16 @@ async function getWeather(element) {
     const tz = "Europe/Berlin";
     const baseUrl = "https://api.brightsky.dev/weather";
 
-    // get position with fallback to lawn in front of the institute
-    let lat = 52.455753;
-    let lon = 13.297442;
+    // fetch the forecast data
     try {
-        const position = await getPosition();
-        lat = position.coords.latitude;
-        lon = position.coords.longitude;
-    } catch (error) {
-        console.error("Failed getting position: " + error.message);
-    }
-
-    // get and parse the forecast data
-    try {
-        const reqUrl = `${baseUrl}?date=${date.toISOString()}&last_date=${lastDate.toISOString()}&lat=${lat}&lon=${lon}&tz=${tz}`;
+        const reqUrl = `${baseUrl}?date=${date.toISOString()}&last_date=${lastDate.toISOString()}&lat=${coords.latitude}&lon=${coords.longitude}&tz=${tz}`;
         const response = await fetch(encodeURI(reqUrl));
         if (!response.ok) {
             console.error(`Response status: ${response.status}`);
         } else {
-            const weatherData = await response.json();
-            element.innerText = "The weather will be " + parseWeather(weatherData);
+            return await response.json();
         }
     } catch (error) {
-        element.innerText = "Error retrieving weather data: " + error.message
         console.error(error.message);
     }
 }
