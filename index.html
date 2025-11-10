@@ -59,8 +59,15 @@
       <a-sphere color="#ffffff" radius="0.18" position="0 -0.02 0.12"></a-sphere>
     </a-entity>
 
-    <!-- Kamera -->
-    <a-entity camera></a-entity>
+<!-- Kamera mit First Person View / Gyroskop 
+ look-controls = schauen / umsehen, mit Maus, Touch oder Gyro.
+  Steuert die Position / Bewegung der Kamera (vorwärts / rückwärts / links / rechts).-->
+<a-entity 
+  camera
+  look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
+  wasd-controls="enabled: false">
+</a-entity>
+    
   </a-scene>
   <script src="ui-elements.js"></script>
   <script>
