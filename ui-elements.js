@@ -1,4 +1,6 @@
 const locationChoiceElement = document.getElementById(`location-choice`);
+const gpsCheckbox = document.getElementById("gps-checkbox");
+const locationInput = document.getElementById("location-input");
 
 async function loadLocationToInput() {
     const coords = await getCoords();
@@ -50,5 +52,14 @@ locationChoiceElement.addEventListener("input", (event) => {
     // check for valid geo coordinates
     if (!getLocationFromInput()) {
         locationChoiceElement.setCustomValidity("Keine gültigen Geo-Koordinaten");
+    }
+});
+
+gpsCheckbox.addEventListener("change", () => {
+    if (gpsCheckbox.checked) {
+      locationInput.style.visibility = "hidden";
+      showLocalWeather();
+    } else {
+      locationInput.style.visibility = "visible";
     }
 });
