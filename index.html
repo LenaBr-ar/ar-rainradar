@@ -14,25 +14,27 @@
   <style>
     html, body { margin:0; height:100%; background: transparent; }
     #infoText { position:fixed; bottom:1rem; left:1rem; color:#fff; font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; z-index:10; text-shadow:0 1px 2px #000; }
-    .svg-icon { height: 20px; width:20px; }
+    .location-ui { position: fixed; top: 1rem; right: 1rem; z-index: 10; }
     a-scene { background-color: transparent !important; }
   </style>
 </head>
 <body>
+  <div class="location-ui">
+    <div style="position: relative; float: right;">
+      <!--- So z.B. als sehr einfachen Toggle stylen https://codepen.io/AllThingsSmitty/pen/MmxxOz/ -->
+      <input type="checkbox" id="gps-checkbox" checked />
+      <label for="gps-checkbox">GPS</label>
+    </div>
+    <div id="location-input" style="visibility: hidden;">
+      <form id="location-form" action="#">
+        <input type="search" list="default-places" id="location-choice" placeholder="52.455753 13.297442"/>
+        <button type="submit">Ok</button>
+      </form>
+
+      <datalist id="default-places">
+      </datalist>
+  </div>
   <div id="infoText">
-    <button id="location-button" type="button" onclick="showLocalWeather()"><img src="current-location-icon.svg" role="img" class="svg-icon"/></button>
-    <form id="location-form" action="#">
-      <input list="default-places" id="location-choice" placeholder="52.455753 13.297442"/>
-      <button type="submit">Ok</button>
-    </form>
-
-    <datalist id="default-places">
-      <option value="52.455753 13.297442" label="T9"></option>
-      <option value="25.298889 91.581389" label="Mawsynram"></option>
-      <option value="-44.648056 167.905556" label="Milford Sound"></option>
-      <option value="-9.431944 159.955556" label="Solomon Islands"></option>
-    </datalist>
-
     <div id="weatherData">Lade Wettervorhersage...</div>
   </div>
 
@@ -74,6 +76,7 @@
       }
     });
     
+    populateCapitals();
     showLocalWeather();
   </script>
 </body>
