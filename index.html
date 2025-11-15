@@ -27,15 +27,11 @@
     </div>
     <div id="location-input" style="visibility: hidden;">
       <form id="location-form" action="#">
-        <input list="default-places" id="location-choice" placeholder="52.455753 13.297442"/>
+        <input type="search" list="default-places" id="location-choice" placeholder="52.455753 13.297442"/>
         <button type="submit">Ok</button>
       </form>
 
       <datalist id="default-places">
-        <option value="52.455753 13.297442" label="T9"></option>
-        <option value="25.298889 91.581389" label="Mawsynram"></option>
-        <option value="-44.648056 167.905556" label="Milford Sound"></option>
-        <option value="-9.431944 159.955556" label="Solomon Islands"></option>
       </datalist>
   </div>
   <div id="infoText">
@@ -80,6 +76,7 @@
       }
     });
     
+    populateCapitals();
     showLocalWeather();
   </script>
 </body>

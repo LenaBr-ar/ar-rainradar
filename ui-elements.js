@@ -2,6 +2,19 @@ const locationChoiceElement = document.getElementById(`location-choice`);
 const gpsCheckbox = document.getElementById("gps-checkbox");
 const locationInput = document.getElementById("location-input");
 
+async function populateCapitals() {
+    const response = await fetch("./capitals-europe.json");
+    if (!response.ok) {
+        console.error("Hauptstädte konnten nicht aus der Datei capitals-europe.json geladen werden.");
+        return;
+    }
+    const capitals = await response.json();
+    const root = document.getElementById("default-places");
+    for (let capital in capitals) {
+        root.appendChild(new Option(capital, capitals[capital]));
+    }    
+}
+
 async function loadLocationToInput() {
     const coords = await getCoords();
     if (coords.fallback) {
