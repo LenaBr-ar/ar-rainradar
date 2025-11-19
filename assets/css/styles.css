@@ -1,3 +1,30 @@
-html { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-body { max-width: 72ch; margin: 4rem auto; padding: 0 1rem; line-height: 1.6; }
-h1 { margin-bottom: 0.5rem; }
+html, body { 
+    margin: 0; 
+    height: 100%; 
+    background: transparent; 
+    color: #fff; 
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
+    text-shadow: 0 1px 2px #000; 
+}
+#infoText { 
+    position: fixed; 
+    bottom: 1rem; 
+    left: 1rem; 
+    z-index: 10; 
+}
+#location-ui { 
+    position: fixed; 
+    top: 1rem; 
+    right: 1rem; 
+    z-index: 10; 
+}
+#gps-toggle { 
+    position: relative; 
+    float: right;
+}
+#location-input { 
+    visibility: hidden; 
+}
+a-scene { 
+    background-color: transparent !important; 
+}
