@@ -5,18 +5,58 @@ html, body {
     color: #fff; 
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
     text-shadow: 0 1px 2px #000; 
+    accent-color: #297AE5;
+}
+.overlay {
+    z-index: 10;
 }
 #infoText { 
     position: fixed; 
     bottom: 1rem; 
     left: 1rem; 
-    z-index: 10; 
 }
 #location-ui { 
     position: fixed; 
     top: 1rem; 
     right: 1rem; 
-    z-index: 10; 
+}
+#precipation-scale {
+    position: fixed;
+    top: 20%;
+    height: 60%;
+    left: 1rem;
+    display: grid;
+    grid-template-rows: 1em auto 1em;
+    gap: 1em;
+    justify-items: center;
+}
+#scale {
+    width: 1em;
+    display: grid;
+    grid-template-rows: auto;
+}
+#prec-5 {
+    background: linear-gradient(0deg, #B93BC2 0%, #EA43F6 20%, #EA43F6 100%);
+}
+#prec-4 {
+    background: linear-gradient(0deg, #326CC0 0%, #85398B 20%, #85398B 80%, #B93BC2 100%);
+}
+#prec-3 {
+    background: linear-gradient(0deg, #4892EC 0%, #3B7DD4 20%, #3B7DD4 80%, #326CC0 100%);
+}
+#prec-2 {
+    background: linear-gradient(0deg, #79CFFA 0%, #59ACF8 20%, #59ACF8 80%, #4892EC 100%);
+}
+#prec-1 {
+    background: linear-gradient(0deg, #BCFCFD 0%, #BCFCFD 80%, #79CFFA 100%);
+}
+#forecast-ui { 
+    position: fixed; 
+    bottom: 1rem; 
+    right: 1rem; 
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    width: 30%;
 }
 #gps-toggle { 
     position: relative; 
@@ -24,6 +64,28 @@ html, body {
 }
 #location-input { 
     visibility: hidden; 
+}
+#forecast-ui div {
+    padding: 1rem;
+}
+#forecast-ui label {
+    display: block;
+    text-align: center;
+}
+#forecast-ui datalist {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    writing-mode: horizontal;
+    width: 100%;
+}
+#forecast-ui option {
+    padding: 0;
+}
+#forecast-ui input[type="range"] {
+    width: 100%;
+    margin: 0;
+    color: #fff;
 }
 a-scene { 
     background-color: transparent !important; 

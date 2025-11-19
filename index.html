@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-  <div id="location-ui">
+  <div id="location-ui" class="overlay">
     <div id="gps-toggle">
       <input type="checkbox" id="gps-checkbox" checked>
       <label for="gps-checkbox">GPS</label>
@@ -27,8 +27,38 @@
       </datalist>
     </div>
   </div>
-  <div id="infoText">
+  <div id="infoText" class="overlay">
     <div id="weatherData">Lade Wettervorhersage...</div>
+  </div>
+  <div id="precipation-scale" class="overlay">
+    <div>stark</div>
+    <div id="scale">
+      <div id="prec-5"></div>
+      <div id="prec-4"></div>
+      <div id="prec-3"></div>
+      <div id="prec-2"></div>
+      <div id="prec-1"></div>
+    </div>
+    <div>leicht</div>
+  </div>
+  <div id="forecast-ui" class="overlay">
+    <div>
+      <label for="forecast-slider">Vorhersage [h]</label><br>
+      <input type="range" id="forecast-slider" min="0" max="6" step="1" list="hour-ticks">
+      <datalist id="hour-ticks">
+        <option value="0" label="&#8201;0"></option>
+        <option value="1"></option>
+        <option value="2" label="2"></option>
+        <option value="3"></option>
+        <option value="4" label="4"></option>
+        <option value="5"></option>
+        <option value="6" label="6&#8201;"></option>
+      </datalist>
+    </div>
+    <div>
+      <label for="animation-toggle">anm</label><br>
+      <input type="checkbox" id="animation-toggle" checked>
+    </div>
   </div>
 
   <a-scene 
