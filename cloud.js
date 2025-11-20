@@ -23,12 +23,12 @@ AFRAME.registerComponent('rain-cloud', {
     }
 
     // Position der Wolke
-    this.cloud.setAttribute('position', '-3 -1.25 -15');
+    this.cloud.setAttribute('position', '0 3 0');
     //this.cloud.setAttribute(
       //'animation',
       //'property: position; dir: alternate; dur: 3000; loop: true; to: 0 2.2 0'
     //);
-    //this.cloud.setAttribute('scale', '0.9 0.7 0.9');
+    //this.cloud.setAttribute('scale', '0.9 0.7 0.9');'-3 -1.25 -15'
 
     el.appendChild(this.cloud);
 
