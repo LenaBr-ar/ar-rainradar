@@ -10,15 +10,62 @@ html, body {
 .overlay {
     z-index: 10;
 }
+input[type="checkbox"] {
+    appearance: none;
+}
+input[type="checkbox"]:checked ~ .icon-container .icon-label .icon {
+    fill: #59ACF8;
+}
+input[type="checkbox"]:checked ~ .icon-container{
+    box-shadow: inset 3px 5px 10px hsla(0,0%,0%,0.5);
+}
+.icon-container {
+    background-color: rgba(0, 0, 0, .4);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    box-shadow: 3px 5px 10px hsla(0,0%,0%,0.5);
+    border-radius: 2em;
+}
+.icon {
+    width: 2em;
+    height: 2em;
+    fill: white;
+}
+#location-form {
+    height: 50%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+}
+#location-form input {
+    background-color: rgba(0, 0, 0, .4);
+    color: white;
+    font-size: 1em;
+}
+#location-form input::placeholder {
+    color: #969191;
+}
+#location-form button {
+    background-color: rgba(0, 0, 0, .4);
+    color: white;
+}
 #infoText { 
     position: fixed; 
     bottom: 1rem; 
     left: 1rem; 
+    padding: 1rem;
 }
 #location-ui { 
     position: fixed; 
     top: 1rem; 
     right: 1rem; 
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    width: 30%;
+}
+#location-ui div {
+    padding: 1rem;
 }
 #precipation-scale {
     position: fixed;
@@ -59,11 +106,13 @@ html, body {
     width: 30%;
 }
 #gps-toggle { 
-    position: relative; 
-    float: right;
+    margin-top: -1em;
 }
 #location-input { 
     visibility: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #forecast-ui div {
     padding: 1rem;
@@ -86,6 +135,9 @@ html, body {
     width: 100%;
     margin: 0;
     color: #fff;
+}
+#animation-label-container {
+    margin-top: -0.4rem;
 }
 a-scene { 
     background-color: transparent !important; 
