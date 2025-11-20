@@ -24,7 +24,7 @@ AFRAME.registerComponent('rain-cloud', {
 
 
     // Direkt über der Kamera, fixiert
-this.cloud.setAttribute('position', '0 3 0'); // 3 Meter über Augenhöhe
+this.cloud.setAttribute('position', '0 5 0'); // 3 Meter über Augenhöhe
 this.cloud.object3D.position.setY(3); // sicherstellen
     // Position der Wolke
     //this.cloud.setAttribute('position', ''-3 -1.25 -15'');
