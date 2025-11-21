@@ -1,5 +1,3 @@
-// cloud.js
-
 AFRAME.registerComponent('rain-cloud', {
   schema: {
     intensity:    {type: 'number', default: 0.7, min: 0, max: 1},
@@ -22,13 +20,12 @@ AFRAME.registerComponent('rain-cloud', {
       this.cloud.setAttribute('gltf-model', '#' + this.data.model.id);
     }
 
-    // Position der Wolke
-    this.cloud.setAttribute('position', '-3 -1.25 -15');
-    //this.cloud.setAttribute(
-      //'animation',
-      //'property: position; dir: alternate; dur: 3000; loop: true; to: 0 2.2 0'
-    //);
-    //this.cloud.setAttribute('scale', '0.9 0.7 0.9');
+    // Direkt über der Kamera, fixiert
+this.cloud.setAttribute('position', '0 5 0'); // 3 Meter über Augenhöhe
+//this.cloud.object3D.position.setY(3); // sicherstellen
+
+// Laptopposition, debugging 
+//this.cloud.setAttribute('position', '-3 -1.25 -15');
 
     el.appendChild(this.cloud);
 
@@ -61,16 +58,22 @@ AFRAME.registerComponent('rain-cloud', {
       });
 
       // Schnee-Entity als Kind der Wolke
-      this.snow = document.createElement('a-entity');
-      this.cloud.appendChild(this.snow);
+      this.precip = document.createElement('a-entity');
+      this.cloud.appendChild(this.precip);
 
       // unter die Wolke verschoben
-      this.snow.setAttribute('position', '3 -6 3');
+      this.precip.setAttribute('position', '3 -6 3');
 
-      this._applySnowFromIntensity();
+      // ---------------- erstmal standard Regen
+      this.currentPrecip = 'rain'; 
+      console.log('[rain-cloud] model-loaded, creating rain'); // Debug
+      this._applyRain();
+      // ----------------
 
       this.cloud.object3D.renderOrder = 1;
-      if (this.snow.object3D) this.snow.object3D.renderOrder = 2;
+      if (this.precip && this.precip.object3D) {
+        this.precip.object3D.renderOrder = 2;
+      } 
 
       this.applyTint();
       this.applyOpacity();
@@ -83,7 +86,11 @@ AFRAME.registerComponent('rain-cloud', {
     if (old.intensity !== this.data.intensity ||
         old.windX     !== this.data.windX ||
         old.windZ     !== this.data.windZ) {
-      this._applySnowFromIntensity();
+      if (this.currentPrecip === 'snow'){
+        this._applySnow();
+      }else if (this.currentPrecip === 'rain'){
+        this._applyRain(); 
+      }
     }
 
     if (old.tint !== this.data.tint ||
@@ -96,18 +103,23 @@ AFRAME.registerComponent('rain-cloud', {
     }
   },
 
-  _applySnowFromIntensity: function () {
-    if (!this.snow) return;
-    const t = clamp(this.data.intensity, 0, 1);
+  _applySnow: function () {
+    if (!this.precip) return;
+    console.log('[rain-cloud] _applySnow called'); // Debug
 
-    const count = Math.round(lerp(900, 2400, t) / 100) * 100;
-    const size  = lerp(0.08, 0.14, t);
+
+    const t = clamp(this.data.intensity, 0, 1);
+    const count = Math.round(lerp(900, 4000, t) / 100) * 100;
+    const size  = lerp(0.08, 0.25, t);
     const speed = lerp(0.7, 1.1, t);
 
     const area   = 10.0;
     const height = 6.0;
 
-    this.snow.setAttribute('snowfall', {
+    // Regen entfernen 
+    this.precip.removeAttribute('rainfall');
+
+    this.precip.setAttribute('snowfall', {
       count,
       size,
       speed,
@@ -117,12 +129,58 @@ AFRAME.registerComponent('rain-cloud', {
       windZ:   this.data.windZ,
       opacity: 1.0
     });
+    this.currentPrecip = 'snow';
+    this.applyTint();
   },
+
+  _applyRain: function () {
+    if (!this.precip) return;
+    console.log('[rain-cloud] _applyRain called');  // Debug
+
+    const t = clamp(this.data.intensity, 0, 1);
+    const count = Math.round(lerp(1000, 4000, t) / 100) * 100;
+    const size  = lerp(0.05, 0.2, t);
+    const speed = lerp(1.8, 3.5, t);
+
+    const area   = 10.0;
+    const height = 6.0;
+
+    // Schnee entfernen 
+    this.precip.removeAttribute('snowfall');
+
+    // Regen hinzufügen
+    this.precip.setAttribute('rainfall', {
+      count,
+      size,
+      speed,
+      area,
+      height,
+      windX:   this.data.windX,
+      windZ:   this.data.windZ,
+      opacity: 1.0
+    });
+    this.currentPrecip = 'rain';
+    this.applyTint();
+  },
+
 
   applyTint: function () {
     const s = clamp(this.data.tintStrength, 0, 1);
     const base    = new AFRAME.THREE.Color(1, 1, 1);
-    const tintCol = new AFRAME.THREE.Color(this.data.tint);
+    // Farbwahl abhängig vom aktuellen Niederschlag
+    let tintCol;
+
+    if (this.currentPrecip === 'snow') {
+      // Schnee = rosa
+      tintCol = new AFRAME.THREE.Color('#f07dd4');
+    } else if (this.currentPrecip === 'rain') {
+      // Regen = blau
+      tintCol = new AFRAME.THREE.Color('#4a9bff');
+    } else {
+      // Fallback: benutze das Tint aus den Component-Daten
+      tintCol = new AFRAME.THREE.Color(this.data.tint);
+    }
+
     const blended = base.lerp(tintCol, s);
 
     for (const m of this.meshes) {
