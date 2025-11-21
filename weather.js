@@ -40,21 +40,24 @@ async function getWeather(coords) {
 
     // calculate surrounding points
     const points = [];
-    points.push(new Coordinates(coords.latitude, coords.longitude));    // current location
-    const lat_north = coords.latitude + (180/Math.PI) * (2500/6378137);
-    points.push(new Coordinates(lat_north, coords.longitude));          // north by 2.5km
-    const lat_south = coords.latitude - (180/Math.PI) * (2500/6378137)
-    points.push(new Coordinates(lat_south, coords.longitude));          // south by 2.5km
-    const lon_east = coords.longitude + (180/Math.PI) * (2500/6378137) / Math.cos(coords.longitude);
-    points.push(new Coordinates(coords.latitude, lon_east));    // east by 2.5km
-    const lon_west = coords.longitude - (180/Math.PI) * (2500/6378137) / Math.cos(coords.longitude);
-    points.push(new Coordinates(coords.latitude, lon_west));    // west by 2.5km
+    const lat = parseFloat(coords.latitude);
+    const lon = parseFloat(coords.longitude);
+    points.push(new Coordinates(lat, lon));    // current location
+    const lat_north = lat + (180/Math.PI) * (2500/6378137);
+    points.push(new Coordinates(lat_north, lon));          // north by 2.5km
+    const lat_south = lat - (180/Math.PI) * (2500/6378137)
+    points.push(new Coordinates(lat_south, lon));          // south by 2.5km
+    const lon_east = lon + (180/Math.PI) * (2500/6378137) / Math.cos(lon);
+    points.push(new Coordinates(lat, lon_east));    // east by 2.5km
+    const lon_west = lon - (180/Math.PI) * (2500/6378137) / Math.cos(lon);
+    points.push(new Coordinates(lat, lon_west));    // west by 2.5km
 
     // fetch the forecast data for each point
     const data = [];
-    for (let point in points) {
+    for (let i=0; i<points.length; i++) {
         try {
-            const reqUrl = `${baseUrl}?date=${date.toISOString()}&last_date=${lastDate.toISOString()}&lat=${coords.latitude}&lon=${coords.longitude}&tz=${tz}`;
+            const reqUrl = `${baseUrl}?date=${date.toISOString()}&last_date=${lastDate.toISOString()}&lat=${points[i].lat}&lon=${points[i].lon}&tz=${tz}`;
+            console.log(reqUrl);
             const response = await fetch(encodeURI(reqUrl));
             if (!response.ok) {
                 console.error(`Response status: ${response.status}`);
