@@ -10,27 +10,60 @@ html, body {
 .overlay {
     z-index: 10;
 }
+
+/* custom checkboxes */
 input[type="checkbox"] {
     appearance: none;
 }
 input[type="checkbox"]:checked ~ .icon-container .icon-label .icon {
     fill: #59ACF8;
 }
+input[type="checkbox"]:checked ~ .icon-container label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
 input[type="checkbox"]:checked ~ .icon-container{
-    box-shadow: inset 3px 5px 10px hsla(0,0%,0%,0.5);
+    box-shadow: inset 3px 5px 10px hsla(0, 0%, 0%, 0.5);
+}
+.custom-checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .icon-container {
     background-color: rgba(0, 0, 0, .4);
+    height: 2.5em;
+    width: 2.5em;
+    padding: 0 !important;
+    align-self: center;
     display: flex; 
     align-items: center; 
     justify-content: center;
-    box-shadow: 3px 5px 10px hsla(0,0%,0%,0.5);
-    border-radius: 2em;
+    box-shadow: 3px 5px 10px hsla(0, 0%, 0%, 0.5);
+    border-radius: 1.25em;
 }
 .icon {
-    width: 2em;
-    height: 2em;
+    width: 1.2em;
+    height: 1.2em;
     fill: white;
+}
+
+/* top right corner - gps access / coordinate input */
+#location-ui { 
+    position: fixed; 
+    top: 1rem; 
+    right: 1rem; 
+    display: grid;
+    grid-template-columns: 1fr 5em;
+    width: 25%;
+    justify-items: center;
+    align-items: center;
+}
+#location-input { 
+    visibility: hidden; 
 }
 #location-form {
     height: 50%;
@@ -42,6 +75,7 @@ input[type="checkbox"]:checked ~ .icon-container{
     background-color: rgba(0, 0, 0, .4);
     color: white;
     font-size: 1em;
+    width: 100%;
 }
 #location-form input::placeholder {
     color: #969191;
@@ -50,23 +84,8 @@ input[type="checkbox"]:checked ~ .icon-container{
     background-color: rgba(0, 0, 0, .4);
     color: white;
 }
-#infoText { 
-    position: fixed; 
-    bottom: 1rem; 
-    left: 1rem; 
-    padding: 1rem;
-}
-#location-ui { 
-    position: fixed; 
-    top: 1rem; 
-    right: 1rem; 
-    display: grid;
-    grid-template-columns: 9fr 1fr;
-    width: 30%;
-}
-#location-ui div {
-    padding: 1rem;
-}
+
+/* left side - precipation scale */
 #precipation-scale {
     position: fixed;
     top: 20%;
@@ -97,27 +116,24 @@ input[type="checkbox"]:checked ~ .icon-container{
 #prec-1 {
     background: linear-gradient(0deg, #BCFCFD 0%, #BCFCFD 80%, #79CFFA 100%);
 }
+
+/* bottom left corner - debug output / weather info */
+#infoText { 
+    position: fixed; 
+    bottom: 1rem; 
+    left: 1rem; 
+}
+
+/* bottom right corner - forecast slider and animation toggle */
 #forecast-ui { 
     position: fixed; 
     bottom: 1rem; 
     right: 1rem; 
     display: grid;
-    grid-template-columns: 9fr 1fr;
+    grid-template-columns: 1fr 5em;
     width: 30%;
 }
-#gps-toggle { 
-    margin-top: -1em;
-}
-#location-input { 
-    visibility: hidden; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-#forecast-ui div {
-    padding: 1rem;
-}
-#forecast-ui label {
+#forecast-label {
     display: block;
     text-align: center;
 }
@@ -136,9 +152,8 @@ input[type="checkbox"]:checked ~ .icon-container{
     margin: 0;
     color: #fff;
 }
-#animation-label-container {
-    margin-top: -0.4rem;
-}
+
+/* A-Frame */
 a-scene { 
     background-color: transparent !important; 
 }
