@@ -1,5 +1,3 @@
-// snow.js
-
 // ===== Helper-Funktionen (global) =====
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const lerp  = (a, b, t)         => a + (b - a) * t;
@@ -17,7 +15,7 @@ function forEachMaterial(mesh, fn) {
   }
 }
 
-// ===== Schneefall (WebGL2-safe) =====
+// Schnee (WebGL2-safe)
 AFRAME.registerComponent('snowfall', {
   schema: {
     count:  {type: 'int',    default: 1800, min: 10},
