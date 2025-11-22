@@ -1,6 +1,4 @@
-// snow.js
-
-// ===== Helper-Funktionen (global) =====
+// Helper-Funktionen (global) auch für rain
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const lerp  = (a, b, t)         => a + (b - a) * t;
 
@@ -17,7 +15,7 @@ function forEachMaterial(mesh, fn) {
   }
 }
 
-// ===== Schneefall (WebGL2-safe) =====
+// Schneefall (WebGL2-safe)
 AFRAME.registerComponent('snowfall', {
   schema: {
     count:  {type: 'int',    default: 1800, min: 10},
@@ -106,7 +104,7 @@ AFRAME.registerComponent('snowfall', {
     this._area   = d.area;
     this._height = d.height;
 
-    // Count geändert -> Geometrie neu erzeugen
+    // Count geändert - Geometrie neu erzeugen
     if (!old || old.count !== d.count) {
       if (this.points.geometry) this.points.geometry.dispose();
 
