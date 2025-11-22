@@ -1,4 +1,4 @@
-// ===== Regen (WebGL2-safe) =====
+// Regen (WebGL2-safe)
 AFRAME.registerComponent('rainfall', {
   schema: {
     count:   {type: 'int',    default: 2200, min: 10},   // Anzahl an Partikeln, etwas mehr Partikel als Schnee
@@ -91,7 +91,7 @@ AFRAME.registerComponent('rainfall', {
     this._last   = performance.now();
 
     // anderer Key als 'snow', damit beide koexistieren können
-    this.el.setObject3D('rain', points); 
+    this.el.setObject3D('rain', points); // hängt Regen als 3D Objekt an die Wolke an 
     console.log('[rainfall] init: rain on', this.el); // Debug
   },
 

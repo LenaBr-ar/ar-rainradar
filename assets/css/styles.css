@@ -1,3 +1,161 @@
-html { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-body { max-width: 72ch; margin: 4rem auto; padding: 0 1rem; line-height: 1.6; }
-h1 { margin-bottom: 0.5rem; }
+html, body { 
+    margin: 0; 
+    height: 100%; 
+    background: transparent; 
+    color: #fff; 
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
+    text-shadow: 0 1px 2px #000; 
+    accent-color: #297AE5;
+}
+.overlay {
+    z-index: 10;
+}
+
+/* custom checkboxes */
+input[type="checkbox"] {
+    appearance: none;
+}
+input[type="checkbox"]:checked ~ .icon-container .icon-label .icon {
+    fill: #59ACF8;
+}
+input[type="checkbox"]:checked ~ .icon-container label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+input[type="checkbox"]:checked ~ .icon-container{
+    box-shadow: inset 3px 5px 10px hsla(0, 0%, 0%, 0.5);
+}
+.custom-checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon-container {
+    background-color: rgba(0, 0, 0, .4);
+    height: 2.5em;
+    width: 2.5em;
+    padding: 0 !important;
+    align-self: center;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    box-shadow: 3px 5px 10px hsla(0, 0%, 0%, 0.5);
+    border-radius: 1.25em;
+}
+.icon {
+    width: 1.2em;
+    height: 1.2em;
+    fill: white;
+}
+
+/* top right corner - gps access / coordinate input */
+#location-ui { 
+    position: fixed; 
+    top: 1rem; 
+    right: 1rem; 
+    display: grid;
+    grid-template-columns: 1fr 5em;
+    width: 25%;
+    min-width: 20em;
+    justify-items: center;
+    align-items: center;
+}
+#location-input { 
+    visibility: hidden; 
+}
+#location-form {
+    height: 50%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+}
+#location-form input {
+    background-color: rgba(0, 0, 0, .4);
+    color: white;
+    font-size: 1em;
+    width: 100%;
+}
+#location-form input::placeholder {
+    color: #969191;
+}
+#location-form button {
+    background-color: rgba(0, 0, 0, .4);
+    color: white;
+}
+
+/* left side - precipation scale */
+#precipation-scale {
+    position: fixed;
+    top: 20%;
+    height: 60%;
+    left: 1rem;
+    display: grid;
+    grid-template-rows: 1em auto 1em;
+    gap: 1em;
+    justify-items: center;
+}
+#scale {
+    width: 1em;
+    display: grid;
+    grid-template-rows: auto;
+}
+#prec-5 {
+    background: linear-gradient(0deg, #B93BC2 0%, #EA43F6 20%, #EA43F6 100%);
+}
+#prec-4 {
+    background: linear-gradient(0deg, #326CC0 0%, #85398B 20%, #85398B 80%, #B93BC2 100%);
+}
+#prec-3 {
+    background: linear-gradient(0deg, #4892EC 0%, #3B7DD4 20%, #3B7DD4 80%, #326CC0 100%);
+}
+#prec-2 {
+    background: linear-gradient(0deg, #79CFFA 0%, #59ACF8 20%, #59ACF8 80%, #4892EC 100%);
+}
+#prec-1 {
+    background: linear-gradient(0deg, #BCFCFD 0%, #BCFCFD 80%, #79CFFA 100%);
+}
+
+/* bottom left corner - debug output / weather info */
+#infoText { 
+    position: fixed; 
+    bottom: 1rem; 
+    left: 1rem; 
+}
+
+/* bottom right corner - forecast slider and animation toggle */
+#forecast-ui { 
+    position: fixed; 
+    bottom: 1rem; 
+    right: 1rem; 
+    display: grid;
+    grid-template-columns: 1fr 5em;
+    width: 30%;
+    min-width: 20em;
+}
+#forecast-label {
+    display: block;
+    text-align: center;
+}
+#forecast-ui datalist {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    writing-mode: horizontal;
+    width: 100%;
+}
+#forecast-ui option {
+    padding: 0;
+}
+#forecast-ui input[type="range"] {
+    width: 100%;
+    margin: 0;
+    color: #fff;
+}
+
+/* A-Frame */
+a-scene { 
+    background-color: transparent !important; 
+}
