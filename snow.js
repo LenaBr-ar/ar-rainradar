@@ -1,4 +1,4 @@
-// ===== Helper-Funktionen (global) =====
+// Helper-Funktionen (global)
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const lerp  = (a, b, t)         => a + (b - a) * t;
 
