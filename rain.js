@@ -1,4 +1,4 @@
-// ===== Regen (WebGL2-safe) =====
+// Regen (WebGL2-safe)
 AFRAME.registerComponent('rainfall', {
   schema: {
     count:   {type: 'int',    default: 2200, min: 10},   // etwas mehr Partikel als Schnee
