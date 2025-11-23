@@ -42,13 +42,13 @@ async function showWeather(event) {
     // get and parse the forecast data    
     event?.preventDefault?.();
     const element = document.getElementById("weatherData");
-    const weather = await getWeather(getLocationFromInput());
-    if (weather) {
-        let text = "The weather here will be " + weather[0] + "\n";
-        text += "The weather north will be " + weather[1] + "\n";
-        text += "The weather south will be " + weather[2] + "\n";
-        text += "The weather east will be " + weather[3] + "\n";
-        text += "The weather west will be " + weather[4];
+    const pointHourMatrix = await getWeather(getLocationFromInput());
+    if (pointHourMatrix) {
+        let text = "The weather here is currently " + pointHourMatrix[0][0] + "\n";
+        text += "The weather north is currently " + pointHourMatrix[1][0] + "\n";
+        text += "The weather south is currently " + pointHourMatrix[2][0] + "\n";
+        text += "The weather east is currently " + pointHourMatrix[3][0] + "\n";
+        text += "The weather west is currently " + pointHourMatrix[4][0];
         element.innerText = text;
     } else {
         element.innerText = "Error retrieving weather data"
