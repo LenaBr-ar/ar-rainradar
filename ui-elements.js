@@ -1,6 +1,7 @@
 const locationChoiceElement = document.getElementById(`location-choice`);
 const gpsCheckbox = document.getElementById("gps-checkbox");
 const locationInput = document.getElementById("location-input");
+let capitals;
 
 async function populateCapitals() {
     const response = await fetch("./capitals-europe.json");
@@ -8,10 +9,10 @@ async function populateCapitals() {
         console.error("Hauptstädte konnten nicht aus der Datei capitals-europe.json geladen werden.");
         return;
     }
-    const capitals = await response.json();
+    capitals = await response.json();
     const root = document.getElementById("default-places");
     for (let capital in capitals) {
-        root.appendChild(new Option(capital, capitals[capital]));
+        root.appendChild(new Option("", capital));
     }    
 }
 
@@ -30,7 +31,10 @@ async function loadLocationToInput() {
  * @returns `coords` object if the input field contains a valid coordinate representation, otherwise `null`.
  */
 function getLocationFromInput() {
-    const coordsStr = locationChoiceElement.value;
+    let coordsStr = locationChoiceElement.value;
+    if (capitals && capitals[coordsStr]) {
+        coordsStr = capitals[coordsStr];
+    }
     const coords = /^\s*(?<latitude>-?\d+\.\d+)[,\s*/\s+](?<longitude>-?\d+\.\d+)\s*$/.exec(coordsStr)?.groups; // null for malformed coordinate strings
     if (!coords || coords.latitude < -90 || coords.latitude > 90 || coords.longitude < -180 || coords.longitude > 180) {
         return null; // invalid geo coordinates
