@@ -1,3 +1,5 @@
+const weatherCache = {};
+
 class Coordinates {
     constructor(lat, lon) {
         this.lat = lat;
@@ -24,9 +26,18 @@ function parseWeather(weatherData) {
     }
 }
 
+function cacheKey(coords) {
+    return `${coords.latitude.toFixed(4)},${coords.longitude.toFixed(4)}`;
+}
+
 async function getWeather(coords) {
     if (!coords) {
         return null;
+    }
+    
+    const coordKey = cacheKey(coords);
+    if (weatherCache[coordKey]) {
+        return weatherCache[coordKey];
     }
 
     // calculate parameters for forecast in local timezone
@@ -39,8 +50,8 @@ async function getWeather(coords) {
     // calculate surrounding points
     const points = [];
     // current location
-    const lat = parseFloat(coords.latitude);
-    const lon = parseFloat(coords.longitude);
+    const lat = coords.latitude;
+    const lon = coords.longitude;
     points.push(new Coordinates(lat, lon));
     // north by 2.5km
     const lat_north = lat + (180/Math.PI) * (2500/6378137);
@@ -80,6 +91,7 @@ async function getWeather(coords) {
             return [];
         }
     }
-
+    
+    weatherCache[coordKey] = pointHourMatrix;
     return pointHourMatrix;
 }

@@ -35,10 +35,12 @@ function getLocationFromInput() {
     if (capitals && capitals[coordsStr]) {
         coordsStr = capitals[coordsStr];
     }
-    const coords = /^\s*(?<latitude>-?\d+\.\d+)[,\s*/\s+](?<longitude>-?\d+\.\d+)\s*$/.exec(coordsStr)?.groups; // null for malformed coordinate strings
+    let coords = /^\s*(?<latitude>-?\d+\.\d+)[,\s*/\s+](?<longitude>-?\d+\.\d+)\s*$/.exec(coordsStr)?.groups; // null for malformed coordinate strings
     if (!coords || coords.latitude < -90 || coords.latitude > 90 || coords.longitude < -180 || coords.longitude > 180) {
         return null; // invalid geo coordinates
     }
+    coords["latitude"] = parseFloat(coords["latitude"]);
+    coords["longitude"] = parseFloat(coords["longitude"]);
     return coords;
 }
 
