@@ -223,11 +223,11 @@ AFRAME.registerComponent('fixed-clouds', {
     const d = this.data.distance;
 
     const positions = [
-      {x: 0, y: 5, z: 0},     // Mitte
-      {x: 0, y: 5, z: -d},    // Norden
-      {x: d, y: 5, z: 0},     // Osten
-      {x: 0, y: 5, z: d},     // Süden
-      {x: -d, y: 5, z: 0}     // Westen
+      {x: 0, y: 30, z: 0},     // Mitte
+      {x: 0, y: 30, z: -d},    // Norden
+      {x: d, y: 30, z: 0},     // Osten
+      {x: 0, y: 30, z: d},     // Süden
+      {x: -d, y: 30, z: 0}     // Westen
     ];
 
     positions.forEach(pos => {
