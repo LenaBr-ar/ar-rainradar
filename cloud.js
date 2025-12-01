@@ -21,7 +21,7 @@ AFRAME.registerComponent('rain-cloud', {
     }
 
     // Direkt über der Kamera, fixiert
-this.cloud.setAttribute('position', '0 5 0'); // 3 Meter über Augenhöhe
+//this.cloud.setAttribute('position', '0 5 0'); // 3 Meter über Augenhöhe
 //this.cloud.object3D.position.setY(3); // sicherstellen
 
 // Laptopposition, debugging 
@@ -207,5 +207,38 @@ this.cloud.setAttribute('position', '0 5 0'); // 3 Meter über Augenhöhe
         mat.needsUpdate = true;
       });
     }
+  }
+});
+
+// ------------------- fixed-clouds-Komponente -------------------
+AFRAME.registerComponent('fixed-clouds', {
+  schema: {
+    model: {type: 'selector'},       // Wolkenmodell
+    intensity: {type: 'number', default: 0.7},
+    opacity: {type: 'number', default: 0.9},
+    distance: {type: 'number', default: 1000} // Abstand N/O/S/W
+  },
+
+  init: function () {
+    const d = this.data.distance;
+
+    const positions = [
+      {x: 0, y: 5, z: 0},     // Mitte
+      {x: 0, y: 5, z: -d},    // Norden
+      {x: d, y: 5, z: 0},     // Osten
+      {x: 0, y: 5, z: d},     // Süden
+      {x: -d, y: 5, z: 0}     // Westen
+    ];
+
+    positions.forEach(pos => {
+      const cloud = document.createElement('a-entity');
+      cloud.setAttribute('rain-cloud', {
+        model: this.data.model,
+        intensity: this.data.intensity,
+        opacity: this.data.opacity
+      });
+      cloud.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+      this.el.appendChild(cloud);
+    });
   }
 });
