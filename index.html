@@ -97,8 +97,19 @@
     <!-- Wolke + Schnee (neues Modell) WICHTIG: id="cloud" bleibt erhalten, falls andere Skripte sie benutzen 
     <a-entity id="cloud"
       rain-cloud="intensity: 0.7; tint: #f07dd4; tintStrength: 0.85; opacity: 0.9; model: #cloudGLB; windX: 0.1; windZ: 0.0">
-    </a-entity> -->
-    <a-entity fixed-clouds="model: #cloudGLB; intensity: 0.7; opacity: 0.9; distance: 100"></a-entity>
+    </a-entity> 
+    <a-entity fixed-clouds="model: #cloudGLB; intensity: 0.7; opacity: 0.9; distance: 100"></a-entity>-->
+
+    <a-entity fixed-clouds="
+    model: #cloudGLB; 
+    intensity: 0.7; 
+    opacity: 0.9; 
+    distance: 100;      /* Distanzangabe */
+    height: 25;         /* passende Höhe der Wolken */
+    scale: 10 10 10;    /* Wolkenmodell skalieren, damit  es auch aus der Ferne sichtbarwird */
+    fillerCount: 6;     /* ein paar Füllwolken */
+    fillerRadius: 50">  <!-- max. Abstand Füllwolken zur Mitte -->
+  </a-entity>
 
     <!-- Kamera mit Gyroskop / First Person -->
     <a-entity 
