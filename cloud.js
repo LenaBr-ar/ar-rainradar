@@ -433,6 +433,3 @@ AFRAME.registerComponent('fixed-clouds', {
     }
   }
 });
-
-// testen in Browser-Konsole: 
-// document.querySelector('a-scene').dispatchEvent(new CustomEvent('weather-changed', { detail: { type: 'dry', intensity: 0 }}));
