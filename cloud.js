@@ -1,6 +1,6 @@
 // Globale Konfiguration für alle Niederschlagsarten
 const PRECIP_CONFIG = {
-    dry: {
+  dry: {
     countMin: 0,
     countMax: 0,
     sizeMin: 0,
@@ -134,11 +134,11 @@ AFRAME.registerComponent('rain-cloud', {
     }
 
     // Direkt über der Kamera, fixiert
-    this.cloud.setAttribute('position', '0 5 0'); // 5 Meter über Augenhöhe
+    // this.cloud.setAttribute('position', '0 5 0'); // 5 Meter über Augenhöhe
     // this.cloud.object3D.position.setY(3); // sicherstellen
 
     // Laptopposition, debugging 
-    // this.cloud.setAttribute('position', '-3 -1.25 -15');
+    this.cloud.setAttribute('position', '-3 -1.25 -15');
 
     el.appendChild(this.cloud);
 
@@ -178,11 +178,9 @@ AFRAME.registerComponent('rain-cloud', {
       // unter die Wolke verschoben
       this.precip.setAttribute('position', '3 -6 3');
 
-      // ---------------- erstmal standard Regen
-      this.currentPrecip = 'rain'; 
-      console.log('[rain-cloud] model-loaded, creating rain'); // Debug
-      this._applyRain();
-      // ----------------
+      // default: dry
+      this.currentPrecip = 'dry'; 
+      this.applyWeather({kind: 'dry', intensity: 0});
 
       // zuerst Wolke, dann Partikel rendern 
       this.cloud.object3D.renderOrder = 1;
