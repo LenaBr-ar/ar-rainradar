@@ -11,6 +11,7 @@
   <script src="snow.js"></script>
   <script src="rain.js"></script>
   <script src="cloud.js"></script>
+  <script src="compass-heading.js"></script>
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
@@ -112,10 +113,12 @@
   </a-entity>
 
     <!-- Kamera mit Gyroskop / First Person -->
-    <a-entity 
-      camera
-      look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
-      wasd-controls="enabled: false">
+    <a-entity id="rig" rotate-to-compass-dir>
+      <a-entity 
+        camera
+        look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
+        wasd-controls="enabled: false">
+      </a-entity>
     </a-entity>
 
   </a-scene>
@@ -128,6 +131,10 @@
         if (video && video.paused) { video.play().catch(()=>{}); }
       }
     });
+    
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientationabsolute", handleOrientation);
+    }
     
     populateCapitals();
     showLocalWeather();
