@@ -89,6 +89,7 @@
     <!-- Assets: neues Wolkenmodell -->
     <a-assets>
       <a-asset-item id="cloudGLB" src="cloud.glb"></a-asset-item>
+      <a-image id="compass-rose" src="assets/compass-rose.png"></a-image>
     </a-assets>
 
     <!-- Licht -->
@@ -111,6 +112,8 @@
     fillerCount: 12;     /* ein paar Füllwolken */
     fillerRadius: 60">  <!-- max. Abstand Füllwolken zur Mitte -->
   </a-entity>
+
+  <a-plane src="#compass-rose" height="25" width="25" position="0 -5 0" rotation="-90 0 0" transparent="true"></a-plane>
 
     <!-- Kamera mit Gyroskop / First Person -->
     <a-entity id="rig" rotate-to-compass-dir>
