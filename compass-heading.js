@@ -34,11 +34,17 @@ function compassHeading(alpha, beta, gamma) {
 
 const {promise: headingPromise, resolve: resolveHeadingPromise, reject: rejectHeadingPromise} = Promise.withResolvers();
 
+setTimeout(() => {
+    rejectHeadingPromise("Could not retrieve compass heading.");
+}, 200);
+
 function handleOrientation(event) {
-    if (!event.absolute) { // orientation data refers to earth coordinate frames (only supported on Android)
-        rejectHeadingPromise?.("Could not retrieve compass heading.");
+    if (event.absolute) { // orientation data refers to earth coordinate frames (only supported on Android)
+        resolveHeadingPromise(compassHeading(event.alpha, event.beta, event.gamma));
     }
-    resolveHeadingPromise?.(compassHeading(event.alpha, event.beta, event.gamma));
+    else if (event.webkitCompassHeading) { // compass heading on iOS, if device was placed flat on a table
+        resolveHeadingPromise((event.webkitCompassHeading + 90) % 360); // rotate by 90 degrees for AR use case
+    }
 }
 
 AFRAME.registerComponent('rotate-to-compass-dir', {

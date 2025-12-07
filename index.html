@@ -137,6 +137,7 @@
     
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientationabsolute", handleOrientation);
+      window.addEventListener("deviceorientation", handleOrientation);
     }
     
     populateCapitals();
