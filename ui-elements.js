@@ -1,6 +1,7 @@
 const locationChoiceElement = document.getElementById(`location-choice`);
 const gpsCheckbox = document.getElementById("gps-checkbox");
 const locationInput = document.getElementById("location-input");
+const forecastSlider = document.getElementById("forecast-slider");
 let capitals;
 
 async function populateCapitals() {
@@ -49,12 +50,13 @@ async function showWeather(event) {
     event?.preventDefault?.();
     const element = document.getElementById("weatherData");
     const pointHourMatrix = await getWeather(getLocationFromInput());
+    const hourIdx = forecastSlider.value;
     if (pointHourMatrix) {
-        let text = "The weather here is currently " + pointHourMatrix[0][0] + "\n";
-        text += "The weather north is currently " + pointHourMatrix[1][0] + "\n";
-        text += "The weather south is currently " + pointHourMatrix[2][0] + "\n";
-        text += "The weather east is currently " + pointHourMatrix[3][0] + "\n";
-        text += "The weather west is currently " + pointHourMatrix[4][0];
+        let text = "The weather here in " + hourIdx + " hour(s) is " + pointHourMatrix[0][hourIdx] + "\n";
+        text += "The weather north in " + hourIdx + " hour(s) is " + pointHourMatrix[1][hourIdx] + "\n";
+        text += "The weather south in " + hourIdx + " hour(s) is " + pointHourMatrix[2][hourIdx] + "\n";
+        text += "The weather east in " + hourIdx + " hour(s) is " + pointHourMatrix[3][hourIdx] + "\n";
+        text += "The weather west in " + hourIdx + " hour(s) is " + pointHourMatrix[4][hourIdx];
         element.innerText = text;
     } else {
         element.innerText = "Error retrieving weather data"
@@ -81,9 +83,11 @@ locationChoiceElement.addEventListener("input", (event) => {
 
 gpsCheckbox.addEventListener("change", () => {
     if (gpsCheckbox.checked) {
-      locationInput.style.visibility = "hidden";
-      showLocalWeather();
+        locationInput.style.visibility = "hidden";
+        showLocalWeather();
     } else {
-      locationInput.style.visibility = "visible";
+        locationInput.style.visibility = "visible";
     }
 });
+
+forecastSlider.addEventListener("input", showWeather);
