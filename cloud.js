@@ -216,56 +216,64 @@ AFRAME.registerComponent('fixed-clouds', {
     model: {type: 'selector'},
     intensity: {type: 'number', default: 0.7},
     opacity: {type: 'number', default: 0.9},
-    distance: {type: 'number', default: 1000}, // Abstand N/O/S/W
-    height: {type: 'number', default: 150},    // Höhe der Wolken
-    scale: {type: 'vec3', default: {x:50, y:50, z:50}}, // Größe der Wolken
-    fillerCount: {type: 'number', default: 6}, // Anzahl der Wolken zwischen den Hauptwolken
-    fillerRadius: {type: 'number', default: 700} // max Abstand für die Füllwolken
+
+    radius: {type: 'number', default: 1000},   // 1 km Wolkenring
+    height: {type: 'number', default: 150},
+    scale: {type: 'vec3', default: {x:50, y:50, z:50}},
+
+    cloudCount: {type: 'number', default: 16}  // Anzahl Wolken im Ring
   },
 
   init: function () {
-    const d = this.data.distance;
+    if (!navigator.geolocation) {
+      console.warn("Geolocation nicht verfügbar");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      this.spawnCloudRing(lat, lon);
+    });
+  },
+
+  spawnCloudRing: function (lat, lon) {
+    const R = this.data.radius;
+    const count = this.data.cloudCount;
     const h = this.data.height;
     const s = this.data.scale;
 
-    // ---------------- Hauptwolken (Mitte + N/O/S/W)
-    const mainPositions = [
-      {x: 0, y: h, z: 0},    // Mitte
-      {x: 0, y: h, z: -d},   // Norden
-      {x: d, y: h, z: 0},    // Osten
-      {x: 0, y: h, z: d},    // Süden
-      {x: -d, y: h, z: 0}    // Westen
-    ];
+    // 1° Breitengrad = 111.32 km
+    const latMeter = 1 / 111320;
+    const lonMeter = 1 / (111320 * Math.cos(lat * Math.PI / 180));
 
-    mainPositions.forEach(pos => {
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2;
+
+      const dx = Math.cos(angle) * R; // Meter
+      const dz = Math.sin(angle) * R;
+
+      const cloudLat = lat + dx * latMeter;
+      const cloudLon = lon + dz * lonMeter;
+
       const cloud = document.createElement('a-entity');
+
+      cloud.setAttribute('gps-entity-place', `
+        latitude: ${cloudLat};
+        longitude: ${cloudLon};
+      `);
+
       cloud.setAttribute('rain-cloud', {
         model: this.data.model,
         intensity: this.data.intensity,
         opacity: this.data.opacity
       });
-      cloud.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+
+      cloud.setAttribute('position', `0 ${h} 0`);
       cloud.setAttribute('scale', `${s.x} ${s.y} ${s.z}`);
+
       this.el.appendChild(cloud);
-    });
-
-    // ---------------- Füllwolken zufällig zwischen den Hauptwolken
-    for (let i = 0; i < this.data.fillerCount; i++) {
-      const angle = Math.random() * Math.PI * 2;   // Zufällige Richtung
-      const radius = Math.random() * this.data.fillerRadius; // Abstand zufällig bis max
-      const x = Math.cos(angle) * radius;
-      const z = Math.sin(angle) * radius;
-      const y = h + (Math.random() * 50 - 25); // leicht zufällige Höhe +/-25m
-
-      const fillerCloud = document.createElement('a-entity');
-      fillerCloud.setAttribute('rain-cloud', {
-        model: this.data.model,
-        intensity: this.data.intensity,
-        opacity: this.data.opacity
-      });
-      fillerCloud.setAttribute('position', `${x} ${y} ${z}`);
-      fillerCloud.setAttribute('scale', `${s.x} ${s.y} ${s.z}`);
-      this.el.appendChild(fillerCloud);
     }
   }
 });
