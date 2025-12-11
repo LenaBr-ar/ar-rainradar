@@ -217,23 +217,16 @@ AFRAME.registerComponent('fixed-clouds', {
     intensity: {type: 'number', default: 0.7},
     opacity: {type: 'number', default: 0.9},
 
-    radius: {type: 'number', default: 5000},   // 5 km Wolkenring
-    height: {type: 'number', default: 250},   // Höhe über Boden
-    scale: {type: 'vec3', default: {x:80, y:80, z:80}}, // Größe der Wolken
-
-    cloudCount: {type: 'number', default: 32}  // Anzahl Wolken im Ring
+    radius: {type: 'number', default: 5000},      // Wolkenring in Meter
+    height: {type: 'number', default: 250},       // Höhe über Meer
+    scale: {type: 'vec3', default: {x:80, y:80, z:80}},
+    cloudCount: {type: 'number', default: 32}
   },
 
   init: function () {
-    if (!navigator.geolocation) {
-      console.warn("Geolocation nicht verfügbar");
-      return;
-    }
-
     navigator.geolocation.getCurrentPosition(pos => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
-
       this.spawnCloudRing(lat, lon);
     });
   },
@@ -241,37 +234,43 @@ AFRAME.registerComponent('fixed-clouds', {
   spawnCloudRing: function (lat, lon) {
     const R = this.data.radius;
     const count = this.data.cloudCount;
-    const h = this.data.height;
+    const height = this.data.height;
     const s = this.data.scale;
 
-    // 1° Breitengrad = ca. 111.32 km
+    // Umrechnung Meter -> Grad
     const latMeter = 1 / 111320;
     const lonMeter = 1 / (111320 * Math.cos(lat * Math.PI / 180));
 
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2;
 
-      const dx = Math.cos(angle) * R; // Meter
+      const dx = Math.cos(angle) * R;
       const dz = Math.sin(angle) * R;
 
       const cloudLat = lat + dx * latMeter;
       const cloudLon = lon + dz * lonMeter;
 
-      const cloud = document.createElement('a-entity');
+      const cloud = document.createElement("a-entity");
 
-      cloud.setAttribute('gps-entity-place', `
-        latitude: ${cloudLat};
-        longitude: ${cloudLon};
-      `);
+      // GPS-POSITION (KEINE lokale Position!)
+      cloud.setAttribute("gps-entity-place", {
+        latitude: cloudLat,
+        longitude: cloudLon
+      });
 
-      cloud.setAttribute('rain-cloud', {
+      // Das Wolkenmodell
+      cloud.setAttribute("rain-cloud", {
         model: this.data.model,
         intensity: this.data.intensity,
         opacity: this.data.opacity
       });
 
-      cloud.setAttribute('position', `0 ${h} 0`);
-      cloud.setAttribute('scale', `${s.x} ${s.y} ${s.z}`);
+      // Höhe der Wolke (Y) wird über Höhen-Offset gesetzt,
+      // OHNE lokale X/Z-Verschiebung
+      cloud.object3D.position.y = height;
+
+      // Größe
+      cloud.setAttribute("scale", `${s.x} ${s.y} ${s.z}`);
 
       this.el.appendChild(cloud);
     }
