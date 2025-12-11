@@ -217,7 +217,7 @@ AFRAME.registerComponent('fixed-clouds', {
     intensity: {type: 'number', default: 0.7},
     opacity: {type: 'number', default: 0.9},
 
-    radius: {type: 'number', default: 300},      // Wolkenring in Meter
+    radius: {type: 'number', default: 30},      // Wolkenring in Meter
     height: {type: 'number', default: 250},       // Höhe über Meer
     scale: {type: 'vec3', default: {x:80, y:80, z:80}},
     cloudCount: {type: 'number', default: 32}
