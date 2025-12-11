@@ -217,11 +217,11 @@ AFRAME.registerComponent('fixed-clouds', {
     intensity: {type: 'number', default: 0.7},
     opacity: {type: 'number', default: 0.9},
 
-    radius: {type: 'number', default: 1000},   // 1 km Wolkenring
-    height: {type: 'number', default: 150},
-    scale: {type: 'vec3', default: {x:50, y:50, z:50}},
+    radius: {type: 'number', default: 5000},   // 5 km Wolkenring
+    height: {type: 'number', default: 250},   // Höhe über Boden
+    scale: {type: 'vec3', default: {x:80, y:80, z:80}}, // Größe der Wolken
 
-    cloudCount: {type: 'number', default: 16}  // Anzahl Wolken im Ring
+    cloudCount: {type: 'number', default: 32}  // Anzahl Wolken im Ring
   },
 
   init: function () {
@@ -244,7 +244,7 @@ AFRAME.registerComponent('fixed-clouds', {
     const h = this.data.height;
     const s = this.data.scale;
 
-    // 1° Breitengrad = 111.32 km
+    // 1° Breitengrad = ca. 111.32 km
     const latMeter = 1 / 111320;
     const lonMeter = 1 / (111320 * Math.cos(lat * Math.PI / 180));
 
