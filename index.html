@@ -80,11 +80,11 @@
     </div>
   </div>
 
-  <a-scene 
+    <a-scene 
     embedded 
     vr-mode-ui="enabled:false"
     renderer="antialias:true; alpha:true; colorManagement:true"
-    arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;">
+    arjs="sourceType: webcam; trackingMethod: best; gps: true; debugUIEnabled: true;">
 
     <!-- Assets: neues Wolkenmodell -->
     <a-assets>
@@ -100,17 +100,6 @@
       rain-cloud="intensity: 0.7; tint: #f07dd4; tintStrength: 0.85; opacity: 0.9; model: #cloudGLB; windX: 0.1; windZ: 0.0">
     </a-entity> 
     <a-entity fixed-clouds="model: #cloudGLB; intensity: 0.7; opacity: 0.9; distance: 100"></a-entity>-->
-
-
-<a-entity fixed-clouds="
-    model: #cloudGLB;        /* Dein Wolkenmodell */
-    intensity: 0.7;          /* Wolkendichte/Intensität */
-    opacity: 0.9;            /* Transparenz */
-    radius: 30;            /* 5 km Wolkenring */
-    cloudCount: 32;          /* Anzahl der Wolken im Ring */
-    height: 250;             /* Höhe über Boden */
-    scale: 80 80 80;         /* Größe der Wolken */
-"></a-entity>
     
 
     <!-- Kamera, die GPS-Positionsdaten verwendetKamera mit Gyroskop / First Person 
@@ -119,12 +108,29 @@
       look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
       wasd-controls="enabled: false">
     </a-entity>-->
-<!-- Kamera, die GPS-Positionsdaten verwendet-->
+<!-- Kamera, die GPS-Positionsdaten verwendet
     <a-entity 
   gps-camera                                              
   rotation-reader
   look-controls="magicWindowTrackingEnabled: true">
-</a-entity>
+</a-entity>-->
+
+    <a-entity
+    camera
+    gps-camera="minDistance: 0;"
+    rotation-reader
+    look-controls="magicWindowTrackingEnabled: true; touchEnabled: true;">
+    </a-entity>
+
+      <a-entity fixed-clouds="
+    model: #cloudGLB;        /* Dein Wolkenmodell */
+    intensity: 0.7;          /* Wolkendichte/Intensität */
+    opacity: 0.9;            /* Transparenz */
+    radius: 30;            /* 5 km Wolkenring */
+    cloudCount: 32;          /* Anzahl der Wolken im Ring */
+    height: 250;             /* Höhe über Boden */
+    scale: 80 80 80;         /* Größe der Wolken */
+"></a-entity>
 
   </a-scene>
 
