@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>WebAR Schneewolke</title>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
- <!-- <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>-->
-   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <script src="gps.js"></script>
   <script src="weather.js"></script>
   <script src="snow.js"></script>
@@ -80,11 +79,11 @@
     </div>
   </div>
 
-    <a-scene 
+  <a-scene 
     embedded 
     vr-mode-ui="enabled:false"
     renderer="antialias:true; alpha:true; colorManagement:true"
-    arjs="sourceType: webcam; trackingMethod: best; gps: true; debugUIEnabled: true;">
+    arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;">
 
     <!-- Assets: neues Wolkenmodell -->
     <a-assets>
@@ -100,37 +99,24 @@
       rain-cloud="intensity: 0.7; tint: #f07dd4; tintStrength: 0.85; opacity: 0.9; model: #cloudGLB; windX: 0.1; windZ: 0.0">
     </a-entity> 
     <a-entity fixed-clouds="model: #cloudGLB; intensity: 0.7; opacity: 0.9; distance: 100"></a-entity>-->
-    
 
-    <!-- Kamera, die GPS-Positionsdaten verwendetKamera mit Gyroskop / First Person 
+    <a-entity fixed-clouds="
+    model: #cloudGLB; 
+    intensity: 0.7; 
+    opacity: 0.9; 
+    distance: 100;      /* Distanzangabe */
+    height: 25;         /* passende Höhe der Wolken */
+    scale: 15 15 15;    /* Wolkenmodell skalieren, damit  es auch aus der Ferne sichtbarwird */
+    fillerCount: 12;     /* ein paar Füllwolken */
+    fillerRadius: 60">  <!-- max. Abstand Füllwolken zur Mitte -->
+  </a-entity>
+
+    <!-- Kamera mit Gyroskop / First Person -->
     <a-entity 
       camera
       look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
       wasd-controls="enabled: false">
-    </a-entity>-->
-<!-- Kamera, die GPS-Positionsdaten verwendet
-    <a-entity 
-  gps-camera                                              
-  rotation-reader
-  look-controls="magicWindowTrackingEnabled: true">
-</a-entity>-->
-
-    <a-entity
-    camera
-    gps-camera="minDistance: 0;"
-    rotation-reader
-    look-controls="magicWindowTrackingEnabled: true; touchEnabled: true;">
     </a-entity>
-
-      <a-entity fixed-clouds="
-    model: #cloudGLB;        /* Dein Wolkenmodell */
-    intensity: 0.7;          /* Wolkendichte/Intensität */
-    opacity: 0.9;            /* Transparenz */
-    radius: 30;            /* 5 km Wolkenring */
-    cloudCount: 32;          /* Anzahl der Wolken im Ring */
-    height: 250;             /* Höhe über Boden */
-    scale: 80 80 80;         /* Größe der Wolken */
-"></a-entity>
 
   </a-scene>
 
