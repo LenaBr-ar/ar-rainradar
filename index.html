@@ -12,6 +12,7 @@
   <script src="rain.js"></script>
   <script src="hail.js"></script>
   <script src="cloud.js"></script>
+  <script src="compass-heading.js"></script>
 
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
@@ -90,6 +91,7 @@
     <!-- Assets: neues Wolkenmodell -->
     <a-assets>
       <a-asset-item id="cloudGLB" src="cloud.glb"></a-asset-item>
+      <a-image id="compass-rose" src="assets/compass-rose.png"></a-image>
     </a-assets>
 
     <!-- Licht -->
@@ -113,11 +115,15 @@
     fillerRadius: 25">  <!-- 60 max. Abstand Füllwolken zur Mitte -->
   </a-entity>
 
+  <a-plane src="#compass-rose" height="25" width="25" position="0 -5 0" rotation="-90 0 0" transparent="true"></a-plane>
+
     <!-- Kamera mit Gyroskop / First Person -->
-    <a-entity 
-      camera
-      look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
-      wasd-controls="enabled: false">
+    <a-entity id="rig" rotate-to-compass-dir>
+      <a-entity 
+        camera
+        look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
+        wasd-controls="enabled: false">
+      </a-entity>
     </a-entity>
 
   </a-scene>
@@ -130,6 +136,11 @@
         if (video && video.paused) { video.play().catch(()=>{}); }
       }
     });
+    
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientationabsolute", handleOrientation);
+      window.addEventListener("deviceorientation", handleOrientation);
+    }
     
     populateCapitals();
     showLocalWeather();
