@@ -52,11 +52,11 @@ async function showWeather(event) {
     const pointHourMatrix = await getWeather(getLocationFromInput());
     const hourIdx = forecastSlider.value;
     if (pointHourMatrix) {
-        let text = "The weather here in " + hourIdx + " hour(s) is " + pointHourMatrix[0][hourIdx] + "\n";
-        text += "The weather north in " + hourIdx + " hour(s) is " + pointHourMatrix[1][hourIdx] + "\n";
-        text += "The weather south in " + hourIdx + " hour(s) is " + pointHourMatrix[2][hourIdx] + "\n";
-        text += "The weather east in " + hourIdx + " hour(s) is " + pointHourMatrix[3][hourIdx] + "\n";
-        text += "The weather west in " + hourIdx + " hour(s) is " + pointHourMatrix[4][hourIdx];
+        let text = "The weather here in " + hourIdx + " hour(s) is " + pointHourMatrix[0][hourIdx].type + "\n";
+        text += "The weather north in " + hourIdx + " hour(s) is " + pointHourMatrix[1][hourIdx].type + "\n";
+        text += "The weather south in " + hourIdx + " hour(s) is " + pointHourMatrix[2][hourIdx].type + "\n";
+        text += "The weather east in " + hourIdx + " hour(s) is " + pointHourMatrix[3][hourIdx].type + "\n";
+        text += "The weather west in " + hourIdx + " hour(s) is " + pointHourMatrix[4][hourIdx].type;
         element.innerText = text;
     } else {
         element.innerText = "Error retrieving weather data"
