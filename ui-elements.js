@@ -1,7 +1,14 @@
+// A-Frame entities:
+const mainCloudEntity = document.querySelector('a-scene').querySelector('#cloud');
+
+// UI-Elements:
 const locationChoiceElement = document.getElementById(`location-choice`);
 const gpsCheckbox = document.getElementById("gps-checkbox");
 const locationInput = document.getElementById("location-input");
 const forecastSlider = document.getElementById("forecast-slider");
+const animationToggle = document.getElementById("animation-toggle");
+
+// Misc.:
 let capitals;
 
 async function populateCapitals() {
@@ -52,24 +59,39 @@ async function showWeather(event) {
     const pointHourMatrix = await getWeather(getLocationFromInput());
     const hourIdx = forecastSlider.value;
     if (pointHourMatrix) {
-        let text = "The weather here in " + hourIdx + " hour(s) is " + pointHourMatrix[0][hourIdx].type + "\n";
-        text += "The weather north in " + hourIdx + " hour(s) is " + pointHourMatrix[1][hourIdx].type + "\n";
-        text += "The weather south in " + hourIdx + " hour(s) is " + pointHourMatrix[2][hourIdx].type + "\n";
-        text += "The weather east in " + hourIdx + " hour(s) is " + pointHourMatrix[3][hourIdx].type + "\n";
-        text += "The weather west in " + hourIdx + " hour(s) is " + pointHourMatrix[4][hourIdx].type;
+        let text = "The weather here in " + hourIdx + " hour(s) is " + pointHourMatrix[0][hourIdx].type + " with Intensity " + pointHourMatrix[0][hourIdx].intensity + "\n";
+        text += "The weather north in " + hourIdx + " hour(s) is " + pointHourMatrix[1][hourIdx].type + " with Intensity " + pointHourMatrix[1][hourIdx].intensity + "\n";
+        text += "The weather south in " + hourIdx + " hour(s) is " + pointHourMatrix[2][hourIdx].type + " with Intensity " + pointHourMatrix[2][hourIdx].intensity + "\n";
+        text += "The weather east in " + hourIdx + " hour(s) is " + pointHourMatrix[3][hourIdx].type + " with Intensity " + pointHourMatrix[3][hourIdx].intensity + "\n";
+        text += "The weather west in " + hourIdx + " hour(s) is " + pointHourMatrix[4][hourIdx].type + " with Intensity " + pointHourMatrix[4][hourIdx].intensity;
         element.innerText = text;
+
+        mainCloudEntity.dispatchEvent(new CustomEvent('weather-changed', { 
+            detail: { 
+                type: pointHourMatrix[0][hourIdx].type, 
+                intensity: pointHourMatrix[0][hourIdx].intensity,
+                animationOn: animationToggle.checked 
+            }
+        }));
     } else {
         element.innerText = "Error retrieving weather data"
     }
     return false;
 }
 
+// load current location to input field and visualize weather
 async function showLocalWeather() {
     await loadLocationToInput();
+    await submitLocation();
+}
+
+// visualize weather for location in input field
+async function submitLocation() {
+    forecastSlider.value = 0;
     await showWeather();
 }
 
-document.getElementById("location-form").addEventListener("submit", showWeather);
+document.getElementById("location-form").addEventListener("submit", submitLocation);
 
 locationChoiceElement.addEventListener("input", (event) => {
     // Validate with the built-in constraints
@@ -90,4 +112,5 @@ gpsCheckbox.addEventListener("change", () => {
     }
 });
 
+animationToggle.addEventListener("change",showWeather);
 forecastSlider.addEventListener("input", showWeather);
