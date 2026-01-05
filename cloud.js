@@ -380,7 +380,7 @@ AFRAME.registerComponent('fixed-clouds', {
     model: {type: 'selector'},       // Wolkenmodell
     intensity: {type: 'number', default: 0.7},
     opacity: {type: 'number', default: 0.9},
-    distance: {type: 'number', default: 1000} // Abstand N/O/S/W
+    distance: {type: 'number', default: 10} // Abstand N/O/S/W
   },
 
   init: function () {
