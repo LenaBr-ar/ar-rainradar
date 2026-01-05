@@ -372,34 +372,29 @@ AFRAME.registerComponent('rain-cloud', {
   }
 });
 
+
+
 // ------------------- fixed-clouds-Komponente -------------------
 AFRAME.registerComponent('fixed-clouds', {
   schema: {
-    model: {type: 'selector'},
+    model: {type: 'selector'},       // Wolkenmodell
     intensity: {type: 'number', default: 0.7},
     opacity: {type: 'number', default: 0.9},
-    distance: {type: 'number', default: 1000}, // Abstand N/O/S/W
-    height: {type: 'number', default: 150},    // Höhe der Wolken
-    scale: {type: 'vec3', default: {x:50, y:50, z:50}}, // Größe der Wolken
-    fillerCount: {type: 'number', default: 6}, // Anzahl der Wolken zwischen den Hauptwolken
-    fillerRadius: {type: 'number', default: 700} // max Abstand für die Füllwolken
+    distance: {type: 'number', default: 1000} // Abstand N/O/S/W
   },
 
   init: function () {
     const d = this.data.distance;
-    const h = this.data.height;
-    const s = this.data.scale;
 
-    // ---------------- Hauptwolken (Mitte + N/O/S/W)
-    const mainPositions = [
-      {x: 0, y: h, z: 0},    // Mitte
-      {x: 0, y: h, z: -d},   // Norden
-      {x: d, y: h, z: 0},    // Osten
-      {x: 0, y: h, z: d},    // Süden
-      {x: -d, y: h, z: 0}    // Westen
+    const positions = [
+      {x: 0, y: 5, z: 0},     // Mitte
+      {x: 0, y: 5, z: -d},    // Norden
+      {x: d, y: 5, z: 0},     // Osten
+      {x: 0, y: 5, z: d},     // Süden
+      {x: -d, y: 5, z: 0}     // Westen
     ];
 
-    mainPositions.forEach(pos => {
+    positions.forEach(pos => {
       const cloud = document.createElement('a-entity');
       cloud.setAttribute('rain-cloud', {
         model: this.data.model,
@@ -407,27 +402,67 @@ AFRAME.registerComponent('fixed-clouds', {
         opacity: this.data.opacity
       });
       cloud.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
-      cloud.setAttribute('scale', `${s.x} ${s.y} ${s.z}`);
       this.el.appendChild(cloud);
     });
-
-    // ---------------- Füllwolken zufällig zwischen den Hauptwolken
-    for (let i = 0; i < this.data.fillerCount; i++) {
-      const angle = Math.random() * Math.PI * 2;   // Zufällige Richtung
-      const radius = Math.random() * this.data.fillerRadius; // Abstand zufällig bis max
-      const x = Math.cos(angle) * radius;
-      const z = Math.sin(angle) * radius;
-      const y = h + (Math.random() * 50 - 25); // leicht zufällige Höhe +/-25m
-
-      const fillerCloud = document.createElement('a-entity');
-      fillerCloud.setAttribute('rain-cloud', {
-        model: this.data.model,
-        intensity: this.data.intensity,
-        opacity: this.data.opacity
-      });
-      fillerCloud.setAttribute('position', `${x} ${y} ${z}`);
-      fillerCloud.setAttribute('scale', `${s.x} ${s.y} ${s.z}`);
-      this.el.appendChild(fillerCloud);
-    }
   }
 });
+
+
+//AFRAME.registerComponent('fixed-clouds', {
+//  schema: {
+//    model: {type: 'selector'},
+  //  intensity: {type: 'number', default: 0.7},
+   // opacity: {type: 'number', default: 0.9},
+   // distance: {type: 'number', default: 1000}, // Abstand N/O/S/W
+   // height: {type: 'number', default: 150},    // Höhe der Wolken
+    //scale: {type: 'vec3', default: {x:50, y:50, z:50}}, // Größe der Wolken
+    //fillerCount: {type: 'number', default: 6}, // Anzahl der Wolken zwischen den Hauptwolken
+    //fillerRadius: {type: 'number', default: 700} // max Abstand für die Füllwolken
+  //},
+
+  //init: function () {
+    //const d = this.data.distance;
+    //const h = this.data.height;
+    //const s = this.data.scale;
+
+    // ---------------- Hauptwolken (Mitte + N/O/S/W)
+   // const mainPositions = [
+     // {x: 0, y: h, z: 0},    // Mitte
+      //{x: 0, y: h, z: -d},   // Norden
+      //{x: d, y: h, z: 0},    // Osten
+      //{x: 0, y: h, z: d},    // Süden
+      //{x: -d, y: h, z: 0}    // Westen
+    //];
+
+    //mainPositions.forEach(pos => {
+      //const cloud = document.createElement('a-entity');
+      //cloud.setAttribute('rain-cloud', {
+       // model: this.data.model,
+        //intensity: this.data.intensity,
+        //opacity: this.data.opacity
+      //});
+   //   cloud.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+   //   cloud.setAttribute('scale', `${s.x} ${s.y} ${s.z}`);
+   //   this.el.appendChild(cloud);
+   // });
+
+    // ---------------- Füllwolken zufällig zwischen den Hauptwolken
+   // for (let i = 0; i < this.data.fillerCount; i++) {
+   //   const angle = Math.random() * Math.PI * 2;   // Zufällige Richtung
+   //   const radius = Math.random() * this.data.fillerRadius; // Abstand zufällig bis max
+   //   const x = Math.cos(angle) * radius;
+   //   const z = Math.sin(angle) * radius;
+   //   const y = h + (Math.random() * 50 - 25); // leicht zufällige Höhe +/-25m
+
+   //   const fillerCloud = document.createElement('a-entity');
+  //    fillerCloud.setAttribute('rain-cloud', {
+   //     model: this.data.model,
+  //      intensity: this.data.intensity,
+  //     opacity: this.data.opacity
+   //   });
+  //    fillerCloud.setAttribute('position', `${x} ${y} ${z}`);
+  //    fillerCloud.setAttribute('scale', `${s.x} ${s.y} ${s.z}`);
+  //    this.el.appendChild(fillerCloud);
+ //   }
+//  }
+//});
