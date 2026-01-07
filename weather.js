@@ -14,7 +14,7 @@ class Condition {
     }
 }
 
-function parseWeather(weatherData, forecast) {
+function parseWeather(weatherData) {
     let condition = new Condition();
 
     switch (weatherData.condition) {
@@ -71,7 +71,7 @@ async function getWeather(coords) {
     // calculate parameters for forecast in local timezone
     let currentTime = new Date();
     let forecastTime = new Date();
-    currentTime.setTime(currentTime.getTime() - 60 * 60 * 1000)
+    currentTime.setTime(currentTime.getTime() - 60 * 60 * 1000);
     forecastTime.setTime(forecastTime.getTime() + 6 * 60 * 60 * 1000);
     const tz = "Europe/Berlin";
     const baseUrl = "https://api.brightsky.dev/weather";
@@ -96,32 +96,30 @@ async function getWeather(coords) {
     const lon_west = lon - ((180 / Math.PI) * (distance / 6378137)) / Math.cos(lon);
     points.push(new Coordinates(lat, lon_west));
 
-    // fetch the current weather data for each point
-    // matrix rows are the points, columns are the hours
-    const pointHourMatrix = [];
-
     // fetch the forecast data for each point
+    const weatherPromises = [];
+    const dummy = { "condition": "dry", "precipitation": 0}; // if no weather data can be retrieved for a query, use dummy data
     for (let i = 0; i < points.length; i++) {
-        try {
-            const reqUrl = `${baseUrl}?date=${currentTime.toISOString()}&last_date=${forecastTime.toISOString()}&lat=${points[i].lat}&lon=${points[i].lon}&tz=${tz}`;
-            const response = await fetch(encodeURI(reqUrl));
+        const reqUrl = `${baseUrl}?date=${currentTime.toISOString()}&last_date=${forecastTime.toISOString()}&lat=${points[i].lat}&lon=${points[i].lon}&tz=${tz}`;
+        weatherPromises.push(fetch(encodeURI(reqUrl)).then(response => {
             if (!response.ok) {
-                console.error(`Response status: ${response.status}`);
-                return [];
+                return { weather: Array(7).fill(dummy) };  
             } else {
-                // parse the data for each forecasted hour for one point
-                pointHourMatrix[i] = [];
-                const data = await response.json();
-                for (let j = 0; j < data.weather.length; j++) {
-                    pointHourMatrix[i].push(parseWeather(data.weather[j], true));
-                }
+                return response.json();
             }
-        } catch (error) {
-            console.error(error.message);
-            return [];
-        }
+        }));
     }
 
+    // parse the data for each forecasted hour for one point
+    // matrix rows are the points, columns are the hours
+    const pointHourMatrix = [];
+    (await Promise.all(weatherPromises)).forEach((data, i) => {
+        pointHourMatrix[i] = [];
+        for (let j = 0; j < data.weather.length; j++) {
+            pointHourMatrix[i].push(parseWeather(data.weather[j]));
+        }
+    });
+    
     weatherCache[coordKey] = pointHourMatrix;
     console.log(pointHourMatrix);
     return pointHourMatrix;
