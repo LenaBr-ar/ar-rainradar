@@ -28,18 +28,10 @@ function parseWeather(weatherData, forecast) {
             condition.type = "hail";
             break;
         case "null":
-            if (forecast) {
-                if (weatherData.precipitation > 0) {
-                    condition.type = "rainy";
-                } else {
-                    condition.type = "dry";
-                }
+            if (weatherData.precipitation > 0) {
+                condition.type = "rainy";
             } else {
-                if (weatherData.precipitation_10 > 0) {
-                    condition.type = "rainy";
-                } else {
-                    condition.type = "dry";
-                }
+                condition.type = "dry";
             }
             break;
         default:
@@ -47,30 +39,16 @@ function parseWeather(weatherData, forecast) {
             break;
     }
 
-    if (forecast) {
-        if (weatherData.precipitation == 0) {
-            condition.intensity = 0;
-        } else if (weatherData.precipitation <= 1) {
-            condition.intensity = 1;
-        } else if (weatherData.precipitation <= 4) {
-            condition.intensity = 2
-        } else if (weatherData.precipitation <= 10) {
-            condition.intensity = 3;
-        } else {
-            condition.intensity = 4;
-        }
+    if (weatherData.precipitation == 0) {
+        condition.intensity = 0;
+    } else if (weatherData.precipitation <= 1) {
+        condition.intensity = 1;
+    } else if (weatherData.precipitation <= 4) {
+        condition.intensity = 2
+    } else if (weatherData.precipitation <= 10) {
+        condition.intensity = 3;
     } else {
-        if (weatherData.precipitation_10 == 0) {
-            condition.intensity = 0;
-        } else if (weatherData.precipitation_10 <= 1) {
-            condition.intensity = 1;
-        } else if (weatherData.precipitation_10 <= 4) {
-            condition.intensity = 2
-        } else if (weatherData.precipitation_10 <= 10) {
-            condition.intensity = 3;
-        } else {
-            condition.intensity = 4;
-        }
+        condition.intensity = 4;
     }
 
     return condition;
@@ -91,8 +69,9 @@ async function getWeather(coords) {
     }
 
     // calculate parameters for forecast in local timezone
-    const currentTime = new Date();
+    let currentTime = new Date();
     let forecastTime = new Date();
+    currentTime.setTime(currentTime.getTime() - 60 * 60 * 1000)
     forecastTime.setTime(forecastTime.getTime() + 6 * 60 * 60 * 1000);
     const tz = "Europe/Berlin";
     const baseUrl = "https://api.brightsky.dev/weather";
@@ -120,23 +99,6 @@ async function getWeather(coords) {
     // fetch the current weather data for each point
     // matrix rows are the points, columns are the hours
     const pointHourMatrix = [];
-    for (let i = 0; i < points.length; i++) {
-        try {
-            const reqUrl = `https://api.brightsky.dev/current_weather?lat=${points[i].lat}&lon=${points[i].lon}&tz=${tz}`;
-            const response = await fetch(encodeURI(reqUrl));
-            if (!response.ok) {
-                console.error(`Response status: ${response.status}`);
-                return [];
-            } else {
-                // parse the data
-                const data = await response.json();
-                pointHourMatrix[i] = [parseWeather(data.weather, false)];
-            }
-        } catch (error) {
-            console.error(error.message);
-            return [];
-        }
-    }
 
     // fetch the forecast data for each point
     for (let i = 0; i < points.length; i++) {
@@ -148,6 +110,7 @@ async function getWeather(coords) {
                 return [];
             } else {
                 // parse the data for each forecasted hour for one point
+                pointHourMatrix[i] = [];
                 const data = await response.json();
                 for (let j = 0; j < data.weather.length; j++) {
                     pointHourMatrix[i].push(parseWeather(data.weather[j], true));
