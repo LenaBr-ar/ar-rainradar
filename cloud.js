@@ -380,24 +380,26 @@ AFRAME.registerComponent('fixed-clouds', {
   init: function () {
     const d = this.data.distance;
 
-    const positions = [
-      {x: 0, y: 5, z: 0},     // Mitte
-      {x: 0, y: 5, z: -d},    // Norden
-      {x: d, y: 5, z: 0},     // Osten
-      {x: 0, y: 5, z: d},     // Süden
-      {x: -d, y: 5, z: 0}     // Westen
-    ];
+    const positions = {
+      "center": {x: 0, y: 0, z: 0},   
+      "north":  {x: 0, y: 0, z: -d},   
+      "east":   {x: d, y: 0, z: 0},   
+      "south":  {x: 0, y: 0, z: d},   
+      "west":   {x: -d, y: 0, z: 0}    
+    };
 
-    positions.forEach(pos => {
+    for (let cloudId in positions) {
       const cloud = document.createElement('a-entity');
       cloud.setAttribute('rain-cloud', {
         model: this.data.model,
         intensity: this.data.intensity,
         opacity: this.data.opacity
       });
+      let pos = positions[cloudId];
       cloud.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+      cloud.setAttribute('id', `${cloudId}-cloud`);
       this.el.appendChild(cloud);
-    });
+    }
   }
 });
 

@@ -1,5 +1,5 @@
 // A-Frame entities:
-const mainCloudEntity = document.querySelector('a-scene').querySelector('#cloud');
+const cloudElements = [];
 
 // UI-Elements:
 const locationChoiceElement = document.getElementById(`location-choice`);
@@ -10,6 +10,12 @@ const animationToggle = document.getElementById("animation-toggle");
 
 // Misc.:
 let capitals;
+
+function getCloudElemsById() {
+    for (const direction of ["center", "north", "south", "east", "west"]) {
+        cloudElements.push(document.querySelector(`#${direction}-cloud`));
+    }
+}
 
 async function populateCapitals() {
     const response = await fetch("./capitals-europe.json");
@@ -66,13 +72,15 @@ async function showWeather(event) {
         text += "The weather west in " + hourIdx + " hour(s) is " + pointHourMatrix[4][hourIdx].type + " with Intensity " + pointHourMatrix[4][hourIdx].intensity;
         element.innerText = text;
 
-        mainCloudEntity.dispatchEvent(new CustomEvent('weather-changed', { 
-            detail: { 
-                type: pointHourMatrix[0][hourIdx].type, 
-                intensity: pointHourMatrix[0][hourIdx].intensity,
-                animationOn: animationToggle.checked 
-            }
-        }));
+        for (let i = 0; i < cloudElements.length; i++){
+            cloudElements[i].dispatchEvent(new CustomEvent('weather-changed', { 
+                detail: { 
+                    type: pointHourMatrix[i][hourIdx].type, 
+                    intensity: pointHourMatrix[i][hourIdx].intensity,
+                    animationOn: animationToggle.checked 
+                }
+            }));
+        }
     } else {
         element.innerText = "Error retrieving weather data"
     }
