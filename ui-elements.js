@@ -1,6 +1,21 @@
+// A-Frame entities:
+const cloudElements = [];
+
+// UI-Elements:
 const locationChoiceElement = document.getElementById(`location-choice`);
 const gpsCheckbox = document.getElementById("gps-checkbox");
 const locationInput = document.getElementById("location-input");
+const forecastSlider = document.getElementById("forecast-slider");
+const animationToggle = document.getElementById("animation-toggle");
+
+// Misc.:
+let capitals;
+
+function getCloudElemsById() {
+    for (const direction of ["center", "north", "south", "east", "west"]) {
+        cloudElements.push(document.querySelector(`#${direction}-cloud`));
+    }
+}
 
 async function populateCapitals() {
     const response = await fetch("./capitals-europe.json");
@@ -8,10 +23,10 @@ async function populateCapitals() {
         console.error("Hauptstädte konnten nicht aus der Datei capitals-europe.json geladen werden.");
         return;
     }
-    const capitals = await response.json();
+    capitals = await response.json();
     const root = document.getElementById("default-places");
     for (let capital in capitals) {
-        root.appendChild(new Option(capital, capitals[capital]));
+        root.appendChild(new Option("", capital));
     }    
 }
 
@@ -30,11 +45,16 @@ async function loadLocationToInput() {
  * @returns `coords` object if the input field contains a valid coordinate representation, otherwise `null`.
  */
 function getLocationFromInput() {
-    const coordsStr = locationChoiceElement.value;
-    const coords = /^\s*(?<latitude>-?\d+\.\d+)[,\s*/\s+](?<longitude>-?\d+\.\d+)\s*$/.exec(coordsStr)?.groups; // null for malformed coordinate strings
+    let coordsStr = locationChoiceElement.value;
+    if (capitals && capitals[coordsStr]) {
+        coordsStr = capitals[coordsStr];
+    }
+    let coords = /^\s*(?<latitude>-?\d+\.\d+)[,\s*/\s+](?<longitude>-?\d+\.\d+)\s*$/.exec(coordsStr)?.groups; // null for malformed coordinate strings
     if (!coords || coords.latitude < -90 || coords.latitude > 90 || coords.longitude < -180 || coords.longitude > 180) {
         return null; // invalid geo coordinates
     }
+    coords["latitude"] = parseFloat(coords["latitude"]);
+    coords["longitude"] = parseFloat(coords["longitude"]);
     return coords;
 }
 
@@ -43,25 +63,43 @@ async function showWeather(event) {
     event?.preventDefault?.();
     const element = document.getElementById("weatherData");
     const pointHourMatrix = await getWeather(getLocationFromInput());
+    const hourIdx = forecastSlider.value;
     if (pointHourMatrix) {
-        let text = "The weather here is currently " + pointHourMatrix[0][0].type + "\n";
-        text += "The weather north is currently " + pointHourMatrix[1][0].type + "\n";
-        text += "The weather south is currently " + pointHourMatrix[2][0].type + "\n";
-        text += "The weather east is currently " + pointHourMatrix[3][0].type + "\n";
-        text += "The weather west is currently " + pointHourMatrix[4][0].type;
+        let text = "The weather here in " + hourIdx + " hour(s) is " + pointHourMatrix[0][hourIdx].type + " with Intensity " + pointHourMatrix[0][hourIdx].intensity + "\n";
+        text += "The weather north in " + hourIdx + " hour(s) is " + pointHourMatrix[1][hourIdx].type + " with Intensity " + pointHourMatrix[1][hourIdx].intensity + "\n";
+        text += "The weather south in " + hourIdx + " hour(s) is " + pointHourMatrix[2][hourIdx].type + " with Intensity " + pointHourMatrix[2][hourIdx].intensity + "\n";
+        text += "The weather east in " + hourIdx + " hour(s) is " + pointHourMatrix[3][hourIdx].type + " with Intensity " + pointHourMatrix[3][hourIdx].intensity + "\n";
+        text += "The weather west in " + hourIdx + " hour(s) is " + pointHourMatrix[4][hourIdx].type + " with Intensity " + pointHourMatrix[4][hourIdx].intensity;
         element.innerText = text;
+
+        for (let i = 0; i < cloudElements.length; i++){
+            cloudElements[i].dispatchEvent(new CustomEvent('weather-changed', { 
+                detail: { 
+                    type: pointHourMatrix[i][hourIdx].type, 
+                    intensity: pointHourMatrix[i][hourIdx].intensity,
+                    animationOn: animationToggle.checked 
+                }
+            }));
+        }
     } else {
         element.innerText = "Error retrieving weather data"
     }
     return false;
 }
 
+// load current location to input field and visualize weather
 async function showLocalWeather() {
     await loadLocationToInput();
+    await submitLocation();
+}
+
+// visualize weather for location in input field
+async function submitLocation() {
+    forecastSlider.value = 0;
     await showWeather();
 }
 
-document.getElementById("location-form").addEventListener("submit", showWeather);
+document.getElementById("location-form").addEventListener("submit", submitLocation);
 
 locationChoiceElement.addEventListener("input", (event) => {
     // Validate with the built-in constraints
@@ -75,9 +113,12 @@ locationChoiceElement.addEventListener("input", (event) => {
 
 gpsCheckbox.addEventListener("change", () => {
     if (gpsCheckbox.checked) {
-      locationInput.style.visibility = "hidden";
-      showLocalWeather();
+        locationInput.style.visibility = "hidden";
+        showLocalWeather();
     } else {
-      locationInput.style.visibility = "visible";
+        locationInput.style.visibility = "visible";
     }
 });
+
+animationToggle.addEventListener("change",showWeather);
+forecastSlider.addEventListener("input", showWeather);

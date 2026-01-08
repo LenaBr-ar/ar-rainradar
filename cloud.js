@@ -111,20 +111,15 @@ AFRAME.registerComponent('rain-cloud', {
 
     this.meshes = []; // array für 3D-Meshes der Wolke
 
-    // Wetter-Event-Listener 
-    const sceneEl = el.sceneEl;
-
     // Callback-Funktion, Handler als Instanz-Property speichern, wird später wieder entfernt (remove function)
     this._onWeatherChanged = (evt) => {
       const condition = evt.detail;
       const weather = conditionToCloudWeather(condition);
-
+      this.animationOn = evt.detail.animationOn;
       this.applyWeather(weather);
     };
-    // falls Event verfügbar, reagieren alle cloud-entities drauf 
-    if (sceneEl) {
-      sceneEl.addEventListener('weather-changed', this._onWeatherChanged);
-    }
+    // cloud-entities reagieren auf eigene Wetter-Events
+    this.el.addEventListener('weather-changed', this._onWeatherChanged);
     // Wolken-Entity als Kind erzeugen
     this.cloud = document.createElement('a-entity');
 
@@ -292,9 +287,9 @@ AFRAME.registerComponent('rain-cloud', {
 
     this.data.intensity = intensity;
 
-    // spezialfall 'dry' hier, alle anderen über _applyPrecip(kind) 
-    if (kind === 'dry') {
-      this.currentPrecip = 'dry';
+    // spezialfälle 'dry' oder Animationen sind ausgeschaltet hier, alle anderen über _applyPrecip(kind)
+    if (kind === 'dry' || !this.animationOn) {
+      this.currentPrecip = kind;
       if (this.precip) {
         this.precip.removeAttribute('rainfall');
         this.precip.removeAttribute('snowfall');
@@ -313,9 +308,8 @@ AFRAME.registerComponent('rain-cloud', {
   },
 
   remove: function () {
-    const sceneEl = this.el.sceneEl;
-    if (sceneEl && this._onWeatherChanged) {
-      sceneEl.removeEventListener('weather-changed', this._onWeatherChanged);
+    if (this._onWeatherChanged) {
+      this.el.removeEventListener('weather-changed', this._onWeatherChanged);
     }
   },
 
@@ -386,24 +380,26 @@ AFRAME.registerComponent('fixed-clouds', {
   init: function () {
     const d = this.data.distance;
 
-    const positions = [
-      {x: 0, y: 5, z: 0},     // Mitte
-      {x: 0, y: 5, z: -d},    // Norden
-      {x: d, y: 5, z: 0},     // Osten
-      {x: 0, y: 5, z: d},     // Süden
-      {x: -d, y: 5, z: 0}     // Westen
-    ];
+    const positions = {
+      "center": {x: 0, y: 0, z: 0},   
+      "north":  {x: 0, y: 0, z: -d},   
+      "east":   {x: d, y: 0, z: 0},   
+      "south":  {x: 0, y: 0, z: d},   
+      "west":   {x: -d, y: 0, z: 0}    
+    };
 
-    positions.forEach(pos => {
+    for (let cloudId in positions) {
       const cloud = document.createElement('a-entity');
       cloud.setAttribute('rain-cloud', {
         model: this.data.model,
         intensity: this.data.intensity,
         opacity: this.data.opacity
       });
+      let pos = positions[cloudId];
       cloud.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+      cloud.setAttribute('id', `${cloudId}-cloud`);
       this.el.appendChild(cloud);
-    });
+    }
   }
 });
 

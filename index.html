@@ -42,10 +42,9 @@
   <div id="infoText" class="overlay">
     <div id="weatherData">Lade Wettervorhersage...</div>
   </div>
-  <div id="precipation-scale" class="overlay">
+  <div id="precipitation-scale" class="overlay">
     <div>stark</div>
     <div id="scale">
-      <div id="prec-5"></div>
       <div id="prec-4"></div>
       <div id="prec-3"></div>
       <div id="prec-2"></div>
@@ -56,7 +55,7 @@
   <div id="forecast-ui" class="overlay">
     <div>
       <label id="forecast-label" for="forecast-slider">Vorhersage [h]</label><br>
-      <input type="range" id="forecast-slider" min="0" max="6" step="1" list="hour-ticks">
+      <input type="range" id="forecast-slider" min="0" max="6" step="1" list="hour-ticks" value="0">
       <datalist id="hour-ticks">
         <option value="0" label="&#8201;0"></option>
         <option value="1"></option>
@@ -98,14 +97,9 @@
     <a-entity light="type: ambient; intensity: 0.7"></a-entity>
     <a-entity light="type: directional; intensity: 0.6" position="0 1 0"></a-entity>
 
-    <!-- Wolke + Schnee (neues Modell) WICHTIG: id="cloud" bleibt erhalten, falls andere Skripte sie benutzen -->
-    <a-entity id="cloud"
-      rain-cloud="intensity: 0.7; tint: #f07dd4; tintStrength: 0.85; opacity: 0.9; model: #cloudGLB; windX: 0.1; windZ: 0.0">
-    </a-entity> 
     <!-- a-entity fixed-clouds="model: #cloudGLB; intensity: 0.7; opacity: 0.9; distance: 100"></a-entity --> 
 
-    </a-entity> 
-    <a-entity fixed-clouds="model: #cloudGLB; intensity: 0.7; opacity: 0.9; distance: 100"></a-entity>
+    <a-entity id="fixed-clouds" fixed-clouds="model: #cloudGLB; intensity: 0.7; opacity: 0.9; distance: 100"></a-entity>
     <!--
     <a-entity fixed-clouds="
     model: #cloudGLB; 
@@ -145,9 +139,13 @@
       window.addEventListener("deviceorientationabsolute", handleOrientation);
       window.addEventListener("deviceorientation", handleOrientation);
     }
-    
+
     populateCapitals();
-    showLocalWeather();
+    
+    document.querySelector('#fixed-clouds').addEventListener('componentinitialized', () => {
+      getCloudElemsById();
+      showLocalWeather();
+    });
   </script>
 </body>
 </html>

@@ -86,11 +86,11 @@ input[type="checkbox"]:checked ~ .icon-container{
     color: white;
 }
 
-/* left side - precipation scale */
-#precipation-scale {
+/* left side - precipitation scale */
+#precipitation-scale {
     position: fixed;
-    top: 20%;
-    height: 60%;
+    top: 25%;
+    height: 50%;
     left: 1rem;
     display: grid;
     grid-template-rows: 1em auto 1em;
@@ -102,11 +102,8 @@ input[type="checkbox"]:checked ~ .icon-container{
     display: grid;
     grid-template-rows: auto;
 }
-#prec-5 {
-    background: linear-gradient(0deg, #B93BC2 0%, #EA43F6 20%, #EA43F6 100%);
-}
 #prec-4 {
-    background: linear-gradient(0deg, #326CC0 0%, #85398B 20%, #85398B 80%, #B93BC2 100%);
+    background: linear-gradient(0deg, #326CC0 0%, #85398B 20%, #85398B 100%);
 }
 #prec-3 {
     background: linear-gradient(0deg, #4892EC 0%, #3B7DD4 20%, #3B7DD4 80%, #326CC0 100%);
