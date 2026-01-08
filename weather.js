@@ -82,7 +82,15 @@ async function getWeather(coords) {
     const lat = coords.latitude;
     const lon = coords.longitude;
     points.push(new Coordinates(lat, lon));
-    const distance = 10000;
+    
+    // set the radius in which the weather forecast is requested
+    function outside_bb_ger() {
+        isOutside = lat > 54.909656 || lat < 47.334015 || lon < 6.050499 || lon > 14.970064;
+        console.log(`Geo location is outside of Germany's bounding box: ${isOutside}`);
+        return isOutside;
+    }
+    const distance = outside_bb_ger() ? 100_000 : 10_000;
+
     // north by the distance in m
     const lat_north = lat + (180 / Math.PI) * (distance / 6378137);
     points.push(new Coordinates(lat_north, lon));
@@ -100,7 +108,7 @@ async function getWeather(coords) {
     const weatherPromises = [];
     const dummy = { "condition": "dry", "precipitation": 0}; // if no weather data can be retrieved for a query, use dummy data
     for (let i = 0; i < points.length; i++) {
-        const reqUrl = `${baseUrl}?date=${currentTime.toISOString()}&last_date=${forecastTime.toISOString()}&lat=${points[i].lat}&lon=${points[i].lon}&tz=${tz}`;
+        const reqUrl = `${baseUrl}?date=${currentTime.toISOString()}&last_date=${forecastTime.toISOString()}&lat=${points[i].lat}&lon=${points[i].lon}&max_dist=500000&tz=${tz}`;
         weatherPromises.push(fetch(encodeURI(reqUrl)).then(response => {
             if (!response.ok) {
                 return { weather: Array(7).fill(dummy) };  
