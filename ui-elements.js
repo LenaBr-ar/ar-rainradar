@@ -65,11 +65,11 @@ async function showWeather(event) {
     const pointHourMatrix = await getWeather(getLocationFromInput());
     const hourIdx = forecastSlider.value;
     if (pointHourMatrix) {
-        let text = "The weather here in " + hourIdx + " hour(s) is " + pointHourMatrix[0][hourIdx].type + " with Intensity " + pointHourMatrix[0][hourIdx].intensity + "\n";
-        text += "The weather north in " + hourIdx + " hour(s) is " + pointHourMatrix[1][hourIdx].type + " with Intensity " + pointHourMatrix[1][hourIdx].intensity + "\n";
-        text += "The weather south in " + hourIdx + " hour(s) is " + pointHourMatrix[2][hourIdx].type + " with Intensity " + pointHourMatrix[2][hourIdx].intensity + "\n";
-        text += "The weather east in " + hourIdx + " hour(s) is " + pointHourMatrix[3][hourIdx].type + " with Intensity " + pointHourMatrix[3][hourIdx].intensity + "\n";
-        text += "The weather west in " + hourIdx + " hour(s) is " + pointHourMatrix[4][hourIdx].type + " with Intensity " + pointHourMatrix[4][hourIdx].intensity;
+        let text =  `C:  ${pointHourMatrix[0][hourIdx].type}, ${pointHourMatrix[0][hourIdx].intensity}\n`;
+            text += `N:  ${pointHourMatrix[1][hourIdx].type}, ${pointHourMatrix[1][hourIdx].intensity}\n`;
+            text += `S:  ${pointHourMatrix[2][hourIdx].type}, ${pointHourMatrix[2][hourIdx].intensity}\n`;
+            text += `E:  ${pointHourMatrix[3][hourIdx].type}, ${pointHourMatrix[3][hourIdx].intensity}\n`;
+            text += `W:  ${pointHourMatrix[4][hourIdx].type}, ${pointHourMatrix[4][hourIdx].intensity}`;
         element.innerText = text;
 
         for (let i = 0; i < cloudElements.length; i++){
@@ -77,7 +77,7 @@ async function showWeather(event) {
                 detail: { 
                     type: pointHourMatrix[i][hourIdx].type, 
                     intensity: pointHourMatrix[i][hourIdx].intensity,
-                    animationOn: animationToggle.checked 
+                    animationOn: animationToggle.checked ? i === 0 : false
                 }
             }));
         }

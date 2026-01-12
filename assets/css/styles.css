@@ -120,6 +120,7 @@ input[type="checkbox"]:checked ~ .icon-container{
     position: fixed; 
     bottom: 1rem; 
     left: 1rem; 
+    font-size: 0.5rem;
 }
 
 /* bottom right corner - forecast slider and animation toggle */
