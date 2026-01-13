@@ -377,15 +377,22 @@ AFRAME.registerComponent('fixed-clouds', {
     distance: {type: 'number', default: 10} // Abstand N/O/S/W
   },
 
-  init: function () {
+ init: function () {
     const d = this.data.distance;
+    const diag = d / Math.sqrt(2);
 
     const positions = {
-      "center": {x: 0, y: 0, z: 0},   
-      "north":  {x: 0, y: 0, z: -d},   
-      "east":   {x: d, y: 0, z: 0},   
-      "south":  {x: 0, y: 0, z: d},   
-      "west":   {x: -d, y: 0, z: 0}    
+      center: {x: 0, y: 0, z: 0},
+
+      north:  {x: 0,    y: 0, z: -d},
+      east:   {x: d,    y: 0, z: 0},
+      south:  {x: 0,    y: 0, z: d},
+      west:   {x: -d,   y: 0, z: 0},
+
+      northeast: {x:  diag, y: 0, z: -diag}, // NO
+      southeast: {x:  diag, y: 0, z:  diag}, // SO
+      southwest: {x: -diag, y: 0, z:  diag}, // SW
+      northwest: {x: -diag, y: 0, z: -diag}  // NW
     };
 
     for (let cloudId in positions) {
