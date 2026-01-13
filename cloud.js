@@ -377,42 +377,56 @@ AFRAME.registerComponent('fixed-clouds', {
     distance: {type: 'number', default: 10} // Abstand N/O/S/W
   },
 
-const positions = {
-      // Zentrum
-      center: {x: 0, y: 0, z: 0},
+  init: function () {
+    const d  = this.data.distance;
+    const d1 = d / 3;
+    const d2 = 2 * d / 3;
+
+    const diag1 = d1 / Math.sqrt(2);
+    const diag2 = d2 / Math.sqrt(2);
+    const diag3 = d  / Math.sqrt(2);
+
+    const y3 = 0; // Ring 3 (außen)
+    const y2 = 1; // Ring 2
+    const y1 = 2; // Ring 1 **und Center**
+    const y0 = y1; // Center auf derselben Höhe wie Ring 1
+
+    const positions = {
+      // -------- Center --------
+      center: {x: 0, y: y0, z: 0},
 
       // -------- Ring 1 (1/3) --------
-      north1: {x: 0,  y: 0, z: -d1},
-      east1:  {x: d1, y: 0, z:  0},
-      south1: {x: 0,  y: 0, z:  d1},
-      west1:  {x: -d1,y: 0, z:  0},
+      north1: {x: 0,  y: y1, z: -d1},
+      east1:  {x: d1, y: y1, z:  0},
+      south1: {x: 0,  y: y1, z:  d1},
+      west1:  {x: -d1,y: y1, z:  0},
 
-      ne1: {x:  diag1, y: 0, z: -diag1},
-      se1: {x:  diag1, y: 0, z:  diag1},
-      sw1: {x: -diag1, y: 0, z:  diag1},
-      nw1: {x: -diag1, y: 0, z: -diag1},
+      ne1: {x:  diag1, y: y1, z: -diag1},
+      se1: {x:  diag1, y: y1, z:  diag1},
+      sw1: {x: -diag1, y: y1, z:  diag1},
+      nw1: {x: -diag1, y: y1, z: -diag1},
 
       // -------- Ring 2 (2/3) --------
-      north2: {x: 0,  y: 0, z: -d2},
-      east2:  {x: d2, y: 0, z:  0},
-      south2: {x: 0,  y: 0, z:  d2},
-      west2:  {x: -d2,y: 0, z:  0},
+      north2: {x: 0,  y: y2, z: -d2},
+      east2:  {x: d2, y: y2, z:  0},
+      south2: {x: 0,  y: y2, z:  d2},
+      west2:  {x: -d2,y: y2, z:  0},
 
-      ne2: {x:  diag2, y: 0, z: -diag2},
-      se2: {x:  diag2, y: 0, z:  diag2},
-      sw2: {x: -diag2, y: 0, z:  diag2},
-      nw2: {x: -diag2, y: 0, z: -diag2},
+      ne2: {x:  diag2, y: y2, z: -diag2},
+      se2: {x:  diag2, y: y2, z:  diag2},
+      sw2: {x: -diag2, y: y2, z:  diag2},
+      nw2: {x: -diag2, y: y2, z: -diag2},
 
       // -------- Ring 3 (außen) --------
-      north3: {x: 0,  y: 0, z: -d},
-      east3:  {x: d,  y: 0, z:  0},
-      south3: {x: 0,  y: 0, z:  d},
-      west3:  {x: -d, y: 0, z:  0},
+      north3: {x: 0,  y: y3, z: -d},
+      east3:  {x: d,  y: y3, z:  0},
+      south3: {x: 0,  y: y3, z:  d},
+      west3:  {x: -d, y: y3, z:  0},
 
-      ne3: {x:  diag3, y: 0, z: -diag3},
-      se3: {x:  diag3, y: 0, z:  diag3},
-      sw3: {x: -diag3, y: 0, z:  diag3},
-      nw3: {x: -diag3, y: 0, z: -diag3}
+      ne3: {x:  diag3, y: y3, z: -diag3},
+      se3: {x:  diag3, y: y3, z:  diag3},
+      sw3: {x: -diag3, y: y3, z:  diag3},
+      nw3: {x: -diag3, y: y3, z: -diag3}
     };
 
     for (let cloudId in positions) {
