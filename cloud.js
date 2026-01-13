@@ -377,22 +377,42 @@ AFRAME.registerComponent('fixed-clouds', {
     distance: {type: 'number', default: 10} // Abstand N/O/S/W
   },
 
- init: function () {
-    const d = this.data.distance;
-    const diag = d / Math.sqrt(2);
-
-    const positions = {
+const positions = {
+      // Zentrum
       center: {x: 0, y: 0, z: 0},
 
-      north:  {x: 0,    y: 0, z: -d},
-      east:   {x: d,    y: 0, z: 0},
-      south:  {x: 0,    y: 0, z: d},
-      west:   {x: -d,   y: 0, z: 0},
+      // -------- Ring 1 (1/3) --------
+      north1: {x: 0,  y: 0, z: -d1},
+      east1:  {x: d1, y: 0, z:  0},
+      south1: {x: 0,  y: 0, z:  d1},
+      west1:  {x: -d1,y: 0, z:  0},
 
-      northeast: {x:  diag, y: 0, z: -diag}, // NO
-      southeast: {x:  diag, y: 0, z:  diag}, // SO
-      southwest: {x: -diag, y: 0, z:  diag}, // SW
-      northwest: {x: -diag, y: 0, z: -diag}  // NW
+      ne1: {x:  diag1, y: 0, z: -diag1},
+      se1: {x:  diag1, y: 0, z:  diag1},
+      sw1: {x: -diag1, y: 0, z:  diag1},
+      nw1: {x: -diag1, y: 0, z: -diag1},
+
+      // -------- Ring 2 (2/3) --------
+      north2: {x: 0,  y: 0, z: -d2},
+      east2:  {x: d2, y: 0, z:  0},
+      south2: {x: 0,  y: 0, z:  d2},
+      west2:  {x: -d2,y: 0, z:  0},
+
+      ne2: {x:  diag2, y: 0, z: -diag2},
+      se2: {x:  diag2, y: 0, z:  diag2},
+      sw2: {x: -diag2, y: 0, z:  diag2},
+      nw2: {x: -diag2, y: 0, z: -diag2},
+
+      // -------- Ring 3 (außen) --------
+      north3: {x: 0,  y: 0, z: -d},
+      east3:  {x: d,  y: 0, z:  0},
+      south3: {x: 0,  y: 0, z:  d},
+      west3:  {x: -d, y: 0, z:  0},
+
+      ne3: {x:  diag3, y: 0, z: -diag3},
+      se3: {x:  diag3, y: 0, z:  diag3},
+      sw3: {x: -diag3, y: 0, z:  diag3},
+      nw3: {x: -diag3, y: 0, z: -diag3}
     };
 
     for (let cloudId in positions) {
