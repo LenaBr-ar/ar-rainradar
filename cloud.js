@@ -1,4 +1,5 @@
-// Globale Konfiguration für alle Niederschlagsarten
+console.log('cloud.js loaded');
+// Globale Konfiguration für alle Niederschlagsarten / Niederschlagsintensitäten
 const PRECIP_CONFIG = {
   dry: {
     countMin: 0,
@@ -7,34 +8,121 @@ const PRECIP_CONFIG = {
     sizeMax: 0,
     speedMin: 0,
     speedMax: 0,
-    color: '#eeeeee' // helle neutrale Wolke
+    color: '#ffffff' 
   },
   rain: {
-    countMin: 1000,
-    countMax: 4000,
-    sizeMin:  0.05,
-    sizeMax:  0.20,
-    speedMin: 1.8,
-    speedMax: 3.5,
-    color:    '#BCFCFD'  // blau
+    1: {
+      countMin: 1000,
+      countMax: 4000,
+      sizeMin:  0.05,
+      sizeMax:  0.20,
+      speedMin: 1.8,
+      speedMax: 3.5,
+      color:    '#BCFCFD'  
+    },
+    2: {
+      countMin: 2000,
+      countMax: 5000,
+      sizeMin:  0.05,
+      sizeMax:  0.20,
+      speedMin: 1.8,
+      speedMax: 3.5,
+      color:    '#59ACF8'  
+    },
+    3: {
+      countMin: 3000,
+      countMax: 6000,
+      sizeMin:  0.05,
+      sizeMax:  0.20,
+      speedMin: 1.8,
+      speedMax: 3.5,
+      color:    '#3B7DD4'  
+    },
+    4: {
+      countMin: 4000,
+      countMax: 7000,
+      sizeMin:  0.05,
+      sizeMax:  0.20,
+      speedMin: 1.8,
+      speedMax: 3.5,
+      color:    '#85398B'  
+    },
   },
   snow: {
-    countMin: 900,
-    countMax: 4000,
-    sizeMin:  0.08,
-    sizeMax:  0.25,
-    speedMin: 0.7,
-    speedMax: 1.1,
-    color:    '#f07dd4'  // rosa
+    1: {
+      countMin: 900,
+      countMax: 4000,
+      sizeMin:  0.08,
+      sizeMax:  0.25,
+      speedMin: 0.7,
+      speedMax: 1.1,
+      color:    '#ff93ef'  
+    },
+    2: {
+      countMin: 1800,
+      countMax: 4900,
+      sizeMin:  0.08,
+      sizeMax:  0.25,
+      speedMin: 0.7,
+      speedMax: 1.1,
+      color:    '#fd6ce7'    
+    },
+    3: {
+      countMin: 2700,
+      countMax: 5800,
+      sizeMin:  0.08,
+      sizeMax:  0.25,
+      speedMin: 0.7,
+      speedMax: 1.1,
+      color:    '#ff39e1'    
+    },
+    4: {
+      countMin: 3600,
+      countMax: 6700,
+      sizeMin:  0.08,
+      sizeMax:  0.25,
+      speedMin: 0.7,
+      speedMax: 1.1,
+      color:    '#d200b2'  
+    }
   },
   hail: {
-    countMin: 600,
-    countMax: 2500,
-    sizeMin:  0.12,
-    sizeMax:  0.28,
-    speedMin: 1.4,
-    speedMax: 2.4,
-    color:    '#f50505'  // rot
+    1: {
+      countMin: 600,
+      countMax: 2500,
+      sizeMin:  0.12,
+      sizeMax:  0.28,
+      speedMin: 1.4,
+      speedMax: 2.4,
+      color:    '#ff728c'
+    },
+    2: {
+      countMin: 1200,
+      countMax: 3100,
+      sizeMin:  0.12,
+      sizeMax:  0.28,
+      speedMin: 1.4,
+      speedMax: 2.4,
+      color:    '#ff0533'
+    },
+    3: {
+      countMin: 1800,
+      countMax: 3700,
+      sizeMin:  0.12,
+      sizeMax:  0.28,
+      speedMin: 1.4,
+      speedMax: 2.4,
+      color:    '#b90324'  
+    },
+    4: {
+      countMin: 2400,
+      countMax: 4300,
+      sizeMin:  0.12,
+      sizeMax:  0.28,
+      speedMin: 1.4,
+      speedMax: 2.4,
+      color:    '#660113'  // rot
+    },
   }
 };
 
@@ -85,20 +173,16 @@ function conditionToCloudWeather(condition) {
       break;
   }
 
-  // intensity: 0..4 -> 0..1 normalisieren (kontinuierliche Skala 0.0–1.0)
-  // (0 = nichts, 1 = leicht, 4 = stark)
-  const normalizedIntensity = clamp(intensity / 4, 0, 1); // clamp(wert, min, max)
-
   return {
     kind: kind,
-    intensity: normalizedIntensity
+    intensity
   };
 }
 
 AFRAME.registerComponent('rain-cloud', {
   schema: {
     intensity:    {type: 'number', default: 0.7, min: 0, max: 1},
-    tint:         {type: 'color',  default: '#d6cfd4ff'},
+    tint:         {type: 'color',  default: '#ffffff'},
     tintStrength: {type: 'number', default: 0.85, min: 0, max: 1},
     opacity:      {type: 'number', default: 0.9},
     model:        {type: 'selector'}, // <a-asset-item>
@@ -115,6 +199,9 @@ AFRAME.registerComponent('rain-cloud', {
     this._onWeatherChanged = (evt) => {
       const condition = evt.detail;
       const weather = conditionToCloudWeather(condition);
+      this.data.intensity = clamp((weather.intensity - 1) / 3, 0, 1);
+      this.currentPrecip = weather.kind;
+
       this.animationOn = evt.detail.animationOn;
       this.applyWeather(weather);
     };
@@ -188,39 +275,18 @@ AFRAME.registerComponent('rain-cloud', {
     });
   },
 
-  // falls wir noch einen slider bauen... 
-  update: function (old) {
-    if (!old) return;
-
-    if (old.intensity !== this.data.intensity ||
-        old.windX     !== this.data.windX ||
-        old.windZ     !== this.data.windZ) {
-      if (this.currentPrecip === 'snow'){
-        this._applySnow();
-      }else if (this.currentPrecip === 'rain'){
-        this._applyRain(); 
-      }else if (this.currentPrecip === 'hail'){
-        this._applyHail(); 
-      }
-    }
-
-    if (old.tint !== this.data.tint ||
-        old.tintStrength !== this.data.tintStrength) {
-      this.applyTint();
-    }
-
-    if (old.opacity !== this.data.opacity) {
-      this.applyOpacity();
-    }
-  },
-
   _applyPrecip: function (kind) {
     if (!this.precip) return;
-    console.log('[rain-cloud] _applyPrecip called for', kind);
 
     const t   = clamp(this.data.intensity, 0, 1);
-    const cfg = getPrecipConfig(kind);
+    const level = Math.round(t*3) + 1;
+    const cfgKind = PRECIP_CONFIG[kind];
+    const cfg = cfgKind && cfgKind[level];
 
+    if (!cfg) {
+      console.warn('[rain-cloud] no precip config for kind', kind, 'level', level); 
+      return;
+    }
     // Partikelparameter aus intensity ableiten
     const count = Math.round(lerp(cfg.countMin, cfg.countMax, t) / 100) * 100;
     const size  = lerp(cfg.sizeMin,  cfg.sizeMax,  t);
@@ -246,6 +312,14 @@ AFRAME.registerComponent('rain-cloud', {
       console.warn('[rain-cloud] unknown precip kind:', kind);
       return;
     }
+    console.log(
+      '[rain-cloud precip]',
+      kind,
+      'level=', level,
+      'count=', count,
+      'size=', size,
+      'speed=', speed
+    );
 
     this.precip.setAttribute(componentName, {
       count,
@@ -285,8 +359,6 @@ AFRAME.registerComponent('rain-cloud', {
     if (typeof intensity !== 'number') intensity = 0;
     if (!kind) kind = 'dry';
 
-    this.data.intensity = intensity;
-
     // spezialfälle 'dry' oder Animationen sind ausgeschaltet hier, alle anderen über _applyPrecip(kind)
     if (kind === 'dry' || !this.animationOn) {
       this.currentPrecip = kind;
@@ -302,7 +374,6 @@ AFRAME.registerComponent('rain-cloud', {
 
     // Für rain/snow/hail 
     this._applyPrecip(kind);
-
     this.applyTint();
     this.applyOpacity();
   },
@@ -314,35 +385,50 @@ AFRAME.registerComponent('rain-cloud', {
   },
 
   applyTint: function () {
-    const s = clamp(this.data.tintStrength, 0, 1);   // wie stark einfärben
-    const intensity = clamp(this.data.intensity, 0, 1);
-    const base = new AFRAME.THREE.Color(1, 1, 1);    // weiße Wolke
 
-    let precipColor;
-    // Farbe der Niederschlagsart holen (definiert in PRECIP_CONFIG)
-    const cfg = getPrecipConfig(this.currentPrecip);
-    if (cfg) {
-      precipColor = new AFRAME.THREE.Color(cfg.color);
-    } else {
-      precipColor = new AFRAME.THREE.Color(this.data.tint); // falls nichts definiert wurde
+    const intensity = clamp(this.data.intensity, 0, 1); // intensität level 0-3
+   
+    const level = Math.round(intensity * 3) + 1; // intensität level 1-4
+    
+    if (this.currentPrecip === 'dry') return;
+    console.log(
+      '[applyTint]',
+      'currentPrecip =', this.currentPrecip,
+      'rawIntensity =',intensity,
+      'level =', level,
+      'cfg =', PRECIP_CONFIG[this.currentPrecip]
+    );
+
+    const cfg = PRECIP_CONFIG[this.currentPrecip];
+    if (!cfg) {
+      console.warn('[applyTint] no config for', this.currentPrecip);
     }
 
-    // Intensität dunkler mit zunehmender Niederschlagsintensität, max-Wert 60%
-    const toned = precipColor.clone()
-      .lerp(new AFRAME.THREE.Color(0, 0, 0), intensity * 0.6);
+    // explizite Farbe pro Intensitätsstufe
+    let precipColor;
+    if (cfg && cfg[level] && cfg[level].color) {
+      precipColor = new AFRAME.THREE.Color(cfg[level].color);
+    } else {
+      precipColor = new AFRAME.THREE.Color(this.data.tint); // Fallback
+    }
 
-    const finalColor = base.clone().lerp(toned, s);
+    const finalColor = precipColor.clone()
+
+    // Helligkeit anheben (Gamma-korrekt)
+    finalColor.convertSRGBToLinear();
+    finalColor.multiplyScalar(1.6);
+    finalColor.convertLinearToSRGB();
+
     // Farbe auf mesh-array anwenden 
     for (const m of this.meshes) {
       forEachMaterial(m, mat => {
         mat.color.copy(finalColor);
-        // emissive für bessere Beleuchtung ("Selbstleuchten")
-        if (!mat.emissive) {
-          mat.emissive = new AFRAME.THREE.Color(0, 0, 0);
-        }
 
-        const emis = finalColor.clone().multiplyScalar(0.12 * s);
-        mat.emissive.copy(emis);
+        // emissive für bessere Beleuchtung ("Selbstleuchten" um die Farbe korrekter abzubilden)
+        if (mat.emissive) {
+          mat.emissive.copy(finalColor);
+          mat.emissiveIntensity = 0.25;
+        }
 
         mat.needsUpdate = true;
       });
