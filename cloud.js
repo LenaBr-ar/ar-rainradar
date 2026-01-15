@@ -386,7 +386,7 @@ AFRAME.registerComponent('rain-cloud', {
 
   applyTint: function () {
 
-    const intensity = clamp(this.data.intensity, 0, 1); // intensität level 0-3
+    const intensity = clamp(this.data.intensity, 0, 1); // intensität level 0-1
    
     const level = Math.round(intensity * 3) + 1; // intensität level 1-4
     
@@ -413,11 +413,6 @@ AFRAME.registerComponent('rain-cloud', {
     }
 
     const finalColor = precipColor.clone()
-
-    // Helligkeit anheben (Gamma-korrekt)
-    finalColor.convertSRGBToLinear();
-    finalColor.multiplyScalar(1.6);
-    finalColor.convertLinearToSRGB();
 
     // Farbe auf mesh-array anwenden 
     for (const m of this.meshes) {
