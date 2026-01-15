@@ -144,7 +144,7 @@ function conditionToCloudWeather(condition) {
   let intensity = condition.intensity;
 
   // Fallbacks
-  if (typeof intensity !== 'number' || Number.isNaN(intensity) {
+  if (typeof intensity !== 'number' || Number.isNaN(intensity)) {
     intensity = 0;
   }
 
