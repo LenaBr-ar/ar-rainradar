@@ -2,13 +2,15 @@ console.log('cloud.js loaded');
 // Globale Konfiguration für alle Niederschlagsarten / Niederschlagsintensitäten
 const PRECIP_CONFIG = {
   dry: {
-    countMin: 0,
-    countMax: 0,
-    sizeMin: 0,
-    sizeMax: 0,
-    speedMin: 0,
-    speedMax: 0,
-    color: '#ffffff' 
+    1: {
+      countMin: 0,
+      countMax: 0,
+      sizeMin: 0,
+      sizeMax: 0,
+      speedMin: 0,
+      speedMax: 0,
+      color: '#ffffff' 
+    }
   },
   rain: {
     1: {
@@ -134,7 +136,7 @@ function getPrecipConfig(kind) {
 // Erwartete Struktur von condition:
 // { type: 'rain'|'snow'|'hail'|'dry', intensity: 0..4 }
 function conditionToCloudWeather(condition) {
-  if (!condition) {
+  if (!condition || typeof condition !== 'object') {
     return { kind: 'dry', intensity: 0 };
   }
 
@@ -142,7 +144,7 @@ function conditionToCloudWeather(condition) {
   let intensity = condition.intensity;
 
   // Fallbacks
-  if (typeof intensity !== 'number') {
+  if (typeof intensity !== 'number' || Number.isNaN(intensity) {
     intensity = 0;
   }
 
@@ -390,7 +392,6 @@ AFRAME.registerComponent('rain-cloud', {
    
     const level = Math.round(intensity * 3) + 1; // intensität level 1-4
     
-    if (this.currentPrecip === 'dry') return;
     console.log(
       '[applyTint]',
       'currentPrecip =', this.currentPrecip,
