@@ -1,5 +1,5 @@
 // A-Frame entities:
-const cloudElements = [];
+const fixedCloudsEle = document.querySelector(`#fixed-clouds`);
 
 // UI-Elements:
 const locationChoiceElement = document.getElementById(`location-choice`);
@@ -10,12 +10,6 @@ const animationToggle = document.getElementById("animation-toggle");
 
 // Misc.:
 let capitals;
-
-function getCloudElemsById() {
-    for (const direction of ["center", "north", "south", "east", "west"]) {
-        cloudElements.push(document.querySelector(`#${direction}-cloud`));
-    }
-}
 
 async function populateCapitals() {
     const response = await fetch("./capitals-europe.json");
@@ -66,15 +60,18 @@ async function showWeather(event) {
     const hourIdx = forecastSlider.value;
     if (pointHourMatrix) {
         let text =  `C:  ${pointHourMatrix[0][hourIdx].type}, ${pointHourMatrix[0][hourIdx].intensity}\n`;
-            text += `N:  ${pointHourMatrix[1][hourIdx].type}, ${pointHourMatrix[1][hourIdx].intensity}\n`;
-            text += `S:  ${pointHourMatrix[2][hourIdx].type}, ${pointHourMatrix[2][hourIdx].intensity}\n`;
-            text += `E:  ${pointHourMatrix[3][hourIdx].type}, ${pointHourMatrix[3][hourIdx].intensity}\n`;
-            text += `W:  ${pointHourMatrix[4][hourIdx].type}, ${pointHourMatrix[4][hourIdx].intensity}`;
+        text += `N:  ${pointHourMatrix[1][hourIdx].type}, ${pointHourMatrix[1][hourIdx].intensity}\n`;
+        text += `S:  ${pointHourMatrix[2][hourIdx].type}, ${pointHourMatrix[2][hourIdx].intensity}\n`;
+        text += `E:  ${pointHourMatrix[3][hourIdx].type}, ${pointHourMatrix[3][hourIdx].intensity}\n`;
+        text += `W:  ${pointHourMatrix[4][hourIdx].type}, ${pointHourMatrix[4][hourIdx].intensity}`;
         element.innerText = text;
-
-        for (let i = 0; i < cloudElements.length; i++){
-            cloudElements[i].dispatchEvent(new CustomEvent('weather-changed', { 
+        
+        // dbgWeatherEvents();
+        const sector = ["centerSector", "northSector", "southSector", "eastSector", "westSector"];
+        for (let i = 0; i < pointHourMatrix.length; i++){
+            fixedCloudsEle.dispatchEvent(new CustomEvent('sector-weather-changed', { 
                 detail: { 
+                    sector: sector[i],
                     type: pointHourMatrix[i][hourIdx].type, 
                     intensity: pointHourMatrix[i][hourIdx].intensity,
                     animationOn: animationToggle.checked ? i === 0 : false
@@ -97,6 +94,22 @@ async function showLocalWeather() {
 async function submitLocation() {
     forecastSlider.value = 0;
     await showWeather();
+}
+
+// send a different weather event to each cloud sector
+function dbgWeatherEvents() {
+    const sector = ["centerSector", "northSector", "southSector", "eastSector", "westSector"];
+    const dbgType = ["rain", "snow", "rain", "hail", "dry"]
+    for (let i = 0; i < sector.length; i++){
+        fixedCloudsEle.dispatchEvent(new CustomEvent('sector-weather-changed', { 
+            detail: { 
+                sector: sector[i],
+                type: dbgType[i],
+                intensity: i > 0 ? 3 : 4,
+                animationOn: animationToggle.checked ? i === 0 : false
+            }
+        }));
+    }
 }
 
 document.getElementById("location-form").addEventListener("submit", submitLocation);

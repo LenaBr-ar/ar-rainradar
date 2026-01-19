@@ -473,6 +473,26 @@ AFRAME.registerComponent('fixed-clouds', {
     const y1 = 2; // Ring 1 **und Center**
     const y0 = y1; // Center auf derselben Höhe wie Ring 1
 
+    this.sectorMap = {
+      centerSector: { cloudEles: [], lastWeather: null },
+      northSector:  { cloudEles: [], lastWeather: null },
+      eastSector:   { cloudEles: [], lastWeather: null },
+      westSector:   { cloudEles: [], lastWeather: null },
+      southSector:  { cloudEles: [], lastWeather: null },
+    };
+
+    this._onSectorWeatherChanged = (evt) => {
+      if (this.sectorMap[evt.detail.sector].lastWeather === JSON.stringify(evt.detail)) {
+        return;
+      }
+      this.sectorMap[evt.detail.sector].lastWeather = JSON.stringify(evt.detail);
+      for (let cloud of this.sectorMap[evt.detail.sector].cloudEles) {
+        cloud.dispatchEvent(new CustomEvent('weather-changed', {detail: evt.detail}))
+      }
+    };
+    
+    this.el.addEventListener('sector-weather-changed', this._onSectorWeatherChanged);
+
     const positions = {
       // -------- Center --------
       center: {x: 0, y: y0, z: 0},
@@ -520,9 +540,25 @@ AFRAME.registerComponent('fixed-clouds', {
       });
       let pos = positions[cloudId];
       cloud.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
-      cloud.setAttribute('id', `${cloudId}-cloud`);
       this.el.appendChild(cloud);
+      this._assignCloudToSector(cloud, pos);
     }
+  },
+
+  _assignCloudToSector: function (cloud, pos) {
+    let sector; 
+    if (pos.x >= 0 && pos.z < 0) {
+      sector = "northSector";
+    } else if (pos.x > 0 && pos.z >= 0) {
+      sector = "eastSector";
+    } else if (pos.x <= 0 && pos.z > 0) {
+      sector = "southSector";
+    } else if (pos.x < 0 && pos.z <= 0) {
+      sector = "westSector";
+    } else {
+      sector = "centerSector";
+    }
+    this.sectorMap[sector].cloudEles.push(cloud);
   }
 });
 
