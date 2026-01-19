@@ -464,14 +464,25 @@ AFRAME.registerComponent('fixed-clouds', {
     const d1 = d / 3;
     const d2 = 2 * d / 3;
 
+    // ➕ Neuer Ring zwischen Center & Ring 1
+    const dMid    = d1 / 2;
+    const diagMid = dMid / Math.sqrt(2);
+
+    // Diagonalen
     const diag1 = d1 / Math.sqrt(2);
     const diag2 = d2 / Math.sqrt(2);
     const diag3 = d  / Math.sqrt(2);
 
-    const y3 = -2; // Ring 3 (außen)
-    const y2 = -1; // Ring 2
-    const y1 = 0; // Ring 1 **und Center**
-    const y0 = y1; // Center auf derselben Höhe wie Ring 1
+    // Versatz
+    const shiftMid = dMid * 0.25;
+    const shift2   = d2   * 0.25;
+
+  const y3 = -2.5;    // Ring 3 (außen)
+  const y2 = -1;    // Ring 2
+  const y1 = -0.5;     // Ring 1 
+  const yMid = -0.5; // NEUER Ring zwischen Center & Ring 1
+  const y0 = 0;     // Center (FIX)
+ 
 
     this.sectorMap = {
       centerSector: { cloudEles: [], lastWeather: null },
@@ -493,33 +504,44 @@ AFRAME.registerComponent('fixed-clouds', {
     
     this.el.addEventListener('sector-weather-changed', this._onSectorWeatherChanged);
 
-    const positions = {
+   const positions = {
       // -------- Center --------
       center: {x: 0, y: y0, z: 0},
 
-      // -------- Ring 1 (1/3) --------
-      north1: {x: 0,  y: y1, z: -d1},
-      east1:  {x: d1, y: y1, z:  0},
-      south1: {x: 0,  y: y1, z:  d1},
-      west1:  {x: -d1,y: y1, z:  0},
+      // -------- Neuer Ring (zwischen Center & Ring 1) --------
+      northMid: {x:  shiftMid,  y: y1, z: -dMid},
+      eastMid:  {x:  dMid,      y: y1, z:  shiftMid},
+      southMid: {x: -shiftMid, y: y1, z:  dMid},
+      westMid:  {x: -dMid,     y: y1, z: -shiftMid},
+
+      neMid: {x:  diagMid + shiftMid, y: y1, z: -diagMid},
+      seMid: {x:  diagMid,            y: y1, z:  diagMid + shiftMid},
+      swMid: {x: -diagMid + shiftMid, y: y1, z:  diagMid},
+      nwMid: {x: -diagMid,            y: y1, z: -diagMid + shiftMid},
+
+      // -------- Ring 1 (unverändert) --------
+      north1: {x: 0,   y: y1, z: -d1},
+      east1:  {x: d1,  y: y1, z:  0},
+      south1: {x: 0,   y: y1, z:  d1},
+      west1:  {x: -d1, y: y1, z:  0},
 
       ne1: {x:  diag1, y: y1, z: -diag1},
       se1: {x:  diag1, y: y1, z:  diag1},
       sw1: {x: -diag1, y: y1, z:  diag1},
       nw1: {x: -diag1, y: y1, z: -diag1},
 
-      // -------- Ring 2 (2/3) --------
-      north2: {x: 0,  y: y2, z: -d2},
-      east2:  {x: d2, y: y2, z:  0},
-      south2: {x: 0,  y: y2, z:  d2},
-      west2:  {x: -d2,y: y2, z:  0},
+      // -------- Ring 2 (versetzt) --------
+      north2: {x:  shift2,  y: y2, z: -d2},
+      east2:  {x:  d2,      y: y2, z:  shift2},
+      south2: {x: -shift2, y: y2, z:  d2},
+      west2:  {x: -d2,     y: y2, z: -shift2},
 
-      ne2: {x:  diag2, y: y2, z: -diag2},
-      se2: {x:  diag2, y: y2, z:  diag2},
-      sw2: {x: -diag2, y: y2, z:  diag2},
-      nw2: {x: -diag2, y: y2, z: -diag2},
+      ne2: {x:  diag2 + shift2, y: y2, z: -diag2},
+      se2: {x:  diag2,          y: y2, z:  diag2 + shift2},
+      sw2: {x: -diag2 + shift2, y: y2, z:  diag2},
+      nw2: {x: -diag2,          y: y2, z: -diag2 + shift2},
 
-      // -------- Ring 3 (außen) --------
+      // -------- Ring 3 (außen, unverändert) --------
       north3: {x: 0,  y: y3, z: -d},
       east3:  {x: d,  y: y3, z:  0},
       south3: {x: 0,  y: y3, z:  d},
