@@ -468,9 +468,9 @@ AFRAME.registerComponent('fixed-clouds', {
     const diag2 = d2 / Math.sqrt(2);
     const diag3 = d  / Math.sqrt(2);
 
-    const y3 = 0; // Ring 3 (außen)
-    const y2 = 1; // Ring 2
-    const y1 = 2; // Ring 1 **und Center**
+    const y3 = -2; // Ring 3 (außen)
+    const y2 = -1; // Ring 2
+    const y1 = 0; // Ring 1 **und Center**
     const y0 = y1; // Center auf derselben Höhe wie Ring 1
 
     this.sectorMap = {
