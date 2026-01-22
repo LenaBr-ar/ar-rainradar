@@ -66,7 +66,6 @@ async function showWeather(event) {
         text += `W:  ${pointHourMatrix[4][hourIdx].type}, ${pointHourMatrix[4][hourIdx].intensity}`;
         element.innerText = text;
         
-        // dbgWeatherEvents();
         const sector = ["centerSector", "northSector", "southSector", "eastSector", "westSector"];
         for (let i = 0; i < pointHourMatrix.length; i++){
             fixedCloudsEle.dispatchEvent(new CustomEvent('sector-weather-changed', { 
@@ -99,13 +98,14 @@ async function submitLocation() {
 // send a different weather event to each cloud sector
 function dbgWeatherEvents() {
     const sector = ["centerSector", "northSector", "southSector", "eastSector", "westSector"];
-    const dbgType = ["rain", "snow", "rain", "hail", "dry"]
+    const dbgType = ["rain", "snow", "rain", "hail", "dry"];
+    const intensities = [3, 1, 4, 2, 3];
     for (let i = 0; i < sector.length; i++){
         fixedCloudsEle.dispatchEvent(new CustomEvent('sector-weather-changed', { 
             detail: { 
                 sector: sector[i],
                 type: dbgType[i],
-                intensity: i > 0 ? 3 : 4,
+                intensity: intensities[i],
                 animationOn: animationToggle.checked ? i === 0 : false
             }
         }));
