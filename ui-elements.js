@@ -7,9 +7,13 @@ const gpsCheckbox = document.getElementById("gps-checkbox");
 const locationInput = document.getElementById("location-input");
 const forecastSlider = document.getElementById("forecast-slider");
 const animationToggle = document.getElementById("animation-toggle");
+const precipScales = [document.getElementById("rain-scale"), document.getElementById("snow-scale"), document.getElementById("hail-scale")];
+const scaleIcon = document.getElementById("scale-icon");
 
 // Misc.:
 let capitals;
+let currScaleIdx = 0;
+const iconNames = ["water-outline", "snowflake", "decagram-outline"];
 
 async function populateCapitals() {
     const response = await fetch("./capitals-europe.json");
@@ -110,6 +114,14 @@ function dbgWeatherEvents() {
             }
         }));
     }
+}
+
+function rotateScale() {
+    const numScales = precipScales.length
+    precipScales[currScaleIdx].style.display = "none";
+    precipScales[(currScaleIdx + 1) % numScales].style.display = "grid";
+    currScaleIdx = (currScaleIdx + 1) % numScales;
+    scaleIcon.src = `assets/${iconNames[currScaleIdx]}.png`
 }
 
 document.getElementById("location-form").addEventListener("submit", submitLocation);

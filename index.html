@@ -42,13 +42,20 @@
   <div id="infoText" class="overlay">
     <div id="weatherData">Lade Wettervorhersage...</div>
   </div>
-  <div id="precipitation-scale" class="overlay">
+  <div id="precipitation-scale" class="overlay" onclick="rotateScale()">
+    <img id="scale-icon" src="assets/water-outline.png" alt="Wassertropfen">
     <div>stark</div>
-    <div id="scale">
-      <div id="prec-4"></div>
-      <div id="prec-3"></div>
-      <div id="prec-2"></div>
-      <div id="prec-1"></div>
+    <div id="rain-scale" class="scale">
+      <div id="rain-4"></div>
+      <div id="rain-3"></div>
+      <div id="rain-2"></div>
+      <div id="rain-1"></div>
+    </div>
+    <div id="snow-scale" class="scale">
+      <div id="snow-gradient"></div>
+    </div>
+    <div id="hail-scale" class="scale">
+      <div id="hail-gradient"></div>
     </div>
     <div>leicht</div>
   </div>
