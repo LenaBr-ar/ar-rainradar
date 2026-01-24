@@ -43,7 +43,7 @@ function handleOrientation(event) {
         resolveHeadingPromise(compassHeading(event.alpha, event.beta, event.gamma));
     }
     else if (event.webkitCompassHeading) { // compass heading on iOS, if device was placed flat on a table
-        resolveHeadingPromise((event.webkitCompassHeading + 90) % 360); // rotate by 90 degrees for AR use case
+        resolveHeadingPromise(compassHeading((360 - event.webkitCompassHeading), 90, 0)); 
     }
 }
 

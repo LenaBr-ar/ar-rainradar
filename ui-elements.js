@@ -63,12 +63,6 @@ async function showWeather(event) {
     const pointHourMatrix = await getWeather(getLocationFromInput());
     const hourIdx = forecastSlider.value;
     if (pointHourMatrix) {
-        let text =  `C:  ${pointHourMatrix[0][hourIdx].type}, ${pointHourMatrix[0][hourIdx].intensity}\n`;
-        text += `N:  ${pointHourMatrix[1][hourIdx].type}, ${pointHourMatrix[1][hourIdx].intensity}\n`;
-        text += `S:  ${pointHourMatrix[2][hourIdx].type}, ${pointHourMatrix[2][hourIdx].intensity}\n`;
-        text += `E:  ${pointHourMatrix[3][hourIdx].type}, ${pointHourMatrix[3][hourIdx].intensity}\n`;
-        text += `W:  ${pointHourMatrix[4][hourIdx].type}, ${pointHourMatrix[4][hourIdx].intensity}`;
-        element.innerText = text;
         
         const sector = ["centerSector", "northSector", "southSector", "eastSector", "westSector"];
         for (let i = 0; i < pointHourMatrix.length; i++){
@@ -81,9 +75,7 @@ async function showWeather(event) {
                 }
             }));
         }
-    } else {
-        element.innerText = "Error retrieving weather data"
-    }
+    } 
     return false;
 }
 

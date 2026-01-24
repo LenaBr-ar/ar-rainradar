@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>WebAR Schneewolke</title>
+  <title>AR Rainradar</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <script src="gps.js"></script>
@@ -38,9 +39,6 @@
         </label>
       </div>
     </div>
-  </div>
-  <div id="infoText" class="overlay">
-    <div id="weatherData">Lade Wettervorhersage...</div>
   </div>
   <div id="precipitation-scale" class="overlay" onclick="rotateScale()">
     <img id="scale-icon" src="assets/water-outline.png" alt="Wassertropfen">
@@ -120,13 +118,13 @@
    
   </a-entity> --> 
 
-  <a-plane src="#compass-rose" height="25" width="25" position="0 -5 0" rotation="-90 0 0" transparent="true"></a-plane>
+  <a-plane src="#compass-rose" height="20" width="20" position="0 -5 0" rotation="-90 0 0" transparent="true"></a-plane>
 
     <!-- Kamera mit Gyroskop / First Person -->
     <a-entity id="rig" rotate-to-compass-dir>
       <a-entity 
         camera
-        look-controls="touchEnabled: true; magicWindowTrackingEnabled: true"
+        look-controls="touchEnabled: false; magicWindowTrackingEnabled: true"
         wasd-controls="enabled: false">
       </a-entity>
     </a-entity>

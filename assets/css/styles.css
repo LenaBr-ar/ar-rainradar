@@ -89,8 +89,9 @@ input[type="checkbox"]:checked ~ .icon-container{
 /* left side - precipitation scale */
 #precipitation-scale {
     position: fixed;
-    top: 25%;
-    height: 50%;
+    bottom: 20%;
+    height: 60%;
+    min-height: 23rem;
     left: 1rem;
     display: grid;
     grid-template-rows: 1em 1em auto 1em;
