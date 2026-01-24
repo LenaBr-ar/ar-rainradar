@@ -89,30 +89,40 @@ input[type="checkbox"]:checked ~ .icon-container{
 /* left side - precipitation scale */
 #precipitation-scale {
     position: fixed;
-    top: 25%;
-    height: 50%;
+    bottom: 20%;
+    height: 60%;
+    min-height: 23rem;
     left: 1rem;
     display: grid;
-    grid-template-rows: 1em auto 1em;
+    grid-template-rows: 1em 1em auto 1em;
     gap: 1em;
     justify-items: center;
 }
-#scale {
+.scale {
     width: 1em;
     display: grid;
     grid-template-rows: auto;
 }
-#prec-4 {
+#snow-scale, #hail-scale {
+    display: none;
+}
+#rain-4 {
     background: linear-gradient(0deg, #326CC0 0%, #85398B 20%, #85398B 100%);
 }
-#prec-3 {
+#rain-3 {
     background: linear-gradient(0deg, #4892EC 0%, #3B7DD4 20%, #3B7DD4 80%, #326CC0 100%);
 }
-#prec-2 {
+#rain-2 {
     background: linear-gradient(0deg, #79CFFA 0%, #59ACF8 20%, #59ACF8 80%, #4892EC 100%);
 }
-#prec-1 {
+#rain-1 {
     background: linear-gradient(0deg, #BCFCFD 0%, #BCFCFD 80%, #79CFFA 100%);
+}
+#hail-gradient {
+    background: linear-gradient(0deg, #ff728c, #ff0533, #b90324, #660113);
+}
+#snow-gradient {
+    background: linear-gradient(0deg, #ff93ef, #fd6ce7, #ff39e1, #d200b2);
 }
 
 /* bottom left corner - debug output / weather info */

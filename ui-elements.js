@@ -7,9 +7,13 @@ const gpsCheckbox = document.getElementById("gps-checkbox");
 const locationInput = document.getElementById("location-input");
 const forecastSlider = document.getElementById("forecast-slider");
 const animationToggle = document.getElementById("animation-toggle");
+const precipScales = [document.getElementById("rain-scale"), document.getElementById("snow-scale"), document.getElementById("hail-scale")];
+const scaleIcon = document.getElementById("scale-icon");
 
 // Misc.:
 let capitals;
+let currScaleIdx = 0;
+const iconNames = ["water-outline", "snowflake", "decagram-outline"];
 
 async function populateCapitals() {
     const response = await fetch("./capitals-europe.json");
@@ -52,21 +56,13 @@ function getLocationFromInput() {
     return coords;
 }
 
-async function showWeather(event) {
+async function showWeather() {
     // get and parse the forecast data    
-    event?.preventDefault?.();
     const element = document.getElementById("weatherData");
     const pointHourMatrix = await getWeather(getLocationFromInput());
     const hourIdx = forecastSlider.value;
     if (pointHourMatrix) {
-        let text =  `C:  ${pointHourMatrix[0][hourIdx].type}, ${pointHourMatrix[0][hourIdx].intensity}\n`;
-        text += `N:  ${pointHourMatrix[1][hourIdx].type}, ${pointHourMatrix[1][hourIdx].intensity}\n`;
-        text += `S:  ${pointHourMatrix[2][hourIdx].type}, ${pointHourMatrix[2][hourIdx].intensity}\n`;
-        text += `E:  ${pointHourMatrix[3][hourIdx].type}, ${pointHourMatrix[3][hourIdx].intensity}\n`;
-        text += `W:  ${pointHourMatrix[4][hourIdx].type}, ${pointHourMatrix[4][hourIdx].intensity}`;
-        element.innerText = text;
         
-        // dbgWeatherEvents();
         const sector = ["centerSector", "northSector", "southSector", "eastSector", "westSector"];
         for (let i = 0; i < pointHourMatrix.length; i++){
             fixedCloudsEle.dispatchEvent(new CustomEvent('sector-weather-changed', { 
@@ -78,10 +74,7 @@ async function showWeather(event) {
                 }
             }));
         }
-    } else {
-        element.innerText = "Error retrieving weather data"
-    }
-    return false;
+    } 
 }
 
 // load current location to input field and visualize weather
@@ -92,29 +85,40 @@ async function showLocalWeather() {
 
 // visualize weather for location in input field
 async function submitLocation() {
+    event?.preventDefault?.();
     forecastSlider.value = 0;
     await showWeather();
+    return false;
 }
 
 // send a different weather event to each cloud sector
 function dbgWeatherEvents() {
     const sector = ["centerSector", "northSector", "southSector", "eastSector", "westSector"];
-    const dbgType = ["rain", "snow", "rain", "hail", "dry"]
+    const dbgType = ["rain", "snow", "rain", "hail", "dry"];
+    const intensities = [3, 1, 4, 2, 3];
     for (let i = 0; i < sector.length; i++){
         fixedCloudsEle.dispatchEvent(new CustomEvent('sector-weather-changed', { 
             detail: { 
                 sector: sector[i],
                 type: dbgType[i],
-                intensity: i > 0 ? 3 : 4,
+                intensity: intensities[i],
                 animationOn: animationToggle.checked ? i === 0 : false
             }
         }));
     }
 }
 
+function rotateScale() {
+    const numScales = precipScales.length
+    precipScales[currScaleIdx].style.display = "none";
+    precipScales[(currScaleIdx + 1) % numScales].style.display = "grid";
+    currScaleIdx = (currScaleIdx + 1) % numScales;
+    scaleIcon.src = `assets/${iconNames[currScaleIdx]}.png`
+}
+
 document.getElementById("location-form").addEventListener("submit", submitLocation);
 
-locationChoiceElement.addEventListener("input", (event) => {
+locationChoiceElement.addEventListener("input", () => {
     // Validate with the built-in constraints
     locationChoiceElement.setCustomValidity("");
 

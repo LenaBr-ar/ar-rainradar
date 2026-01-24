@@ -562,6 +562,16 @@ AFRAME.registerComponent('fixed-clouds', {
       });
       let pos = positions[cloudId];
       cloud.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+
+      // um Wolkensektoren stärker zu zentrieren
+      if (cloudId === "swMid" || cloudId === "westMid" || cloudId === "nwMid") { 
+        cloud.setAttribute('rotation', '0 180 0');
+      } else if (cloudId === "eastMid" || cloudId === "seMid") { 
+          cloud.setAttribute('rotation', '0 90 0');
+      } else if (cloudId === "center") {
+        cloud.setAttribute('position', `-2.5 ${pos.y} -1`);
+      }
+
       this.el.appendChild(cloud);
       this._assignCloudToSector(cloud, pos);
     }
