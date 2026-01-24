@@ -56,9 +56,8 @@ function getLocationFromInput() {
     return coords;
 }
 
-async function showWeather(event) {
+async function showWeather() {
     // get and parse the forecast data    
-    event?.preventDefault?.();
     const element = document.getElementById("weatherData");
     const pointHourMatrix = await getWeather(getLocationFromInput());
     const hourIdx = forecastSlider.value;
@@ -76,7 +75,6 @@ async function showWeather(event) {
             }));
         }
     } 
-    return false;
 }
 
 // load current location to input field and visualize weather
@@ -87,8 +85,10 @@ async function showLocalWeather() {
 
 // visualize weather for location in input field
 async function submitLocation() {
+    event?.preventDefault?.();
     forecastSlider.value = 0;
     await showWeather();
+    return false;
 }
 
 // send a different weather event to each cloud sector
@@ -118,7 +118,7 @@ function rotateScale() {
 
 document.getElementById("location-form").addEventListener("submit", submitLocation);
 
-locationChoiceElement.addEventListener("input", (event) => {
+locationChoiceElement.addEventListener("input", () => {
     // Validate with the built-in constraints
     locationChoiceElement.setCustomValidity("");
 
