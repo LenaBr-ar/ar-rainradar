@@ -43,7 +43,10 @@ async function loadLocationToInput() {
  * @returns `coords` object if the input field contains a valid coordinate representation, otherwise `null`.
  */
 function getLocationFromInput() {
-    let coordsStr = locationChoiceElement.value;
+    let coordsStr = locationChoiceElement.value.trim();
+    if (coordsStr) {
+        coordsStr = coordsStr[0].toUpperCase() + coordsStr.substring(1);
+    }
     if (capitals && capitals[coordsStr]) {
         coordsStr = capitals[coordsStr];
     }
